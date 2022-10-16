@@ -1,0 +1,12 @@
+{
+    "parentSettingPasswordInputLabel": "Password",
+    "parentalSettingTitle": "Parental Settings",
+    "parentalSettingSubtitle": "Please set a parental password and security questions",
+    "configQuestion1": "One of your favourite books",
+    "configQuestion2": "One of your favourite songs",
+    "configQuestion3": "One of your favourite films",
+    "parentalSettingQaTitle": "Security Q&A",
+    "parentalSettingQaSubtitle": "Please set a security question to prevent forgetting your password",
+    "parentalQaInputLabel": "Answer",
+    "parentalSettingSaveLabel": "Save"
+}

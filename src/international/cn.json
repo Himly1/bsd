@@ -1,0 +1,12 @@
+{
+    "parentSettingPasswordInputLabel": "密码",
+    "parentalSettingTitle": "家长设置",
+    "parentalSettingSubtitle": "请设置家长密码及安全问题",
+    "configQuestion1": "你最喜欢的一本书?",
+    "configQuestion2": "你最喜欢的一首音乐?",
+    "configQuestion3": "你最喜欢的一部电影?",
+    "parentalSettingQaTitle": "安全问题",
+    "parentalSettingQaSubtitle": "请设置安全问题以防止忘记密码",
+    "parentalQaInputLabel": "答案",
+    "parentalSettingSaveLabel": "保存"
+}
