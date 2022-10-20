@@ -29,7 +29,7 @@ function TimeRangeRemove({ whenRemove }) {
     </button>
 }
 
-function TimeRangePicker({ id, defaultTimeRange, whenItChange, isLastOne, whenTimeRangeAdd, whenTimeRangeRemoved, duplicated }) {
+function TimeRangePicker({ id, defaultTimeRange, whenItChange, isLastOne, whenTimeRangeAdd, whenTimeRangeRemoved, duplicated, showAddButton }) {
     const [timeState, setTimeState] = useReducer((p, n) => ({ ...p, ...n }), {
         start: defaultTimeRange[0],
         end: defaultTimeRange[1],
@@ -73,7 +73,7 @@ function TimeRangePicker({ id, defaultTimeRange, whenItChange, isLastOne, whenTi
                 <input style={{ 'width': '40%' }} onChange={onStartTimeChange} value={timeState.start ? timeState.start : ""} className={timeState.ok && !duplicated ? 'level-item input is-success' : 'level-item input is-danger'} type={'time'} />
                 <p className="label ml-3"> : </p>
                 <input style={{ 'width': '40%' }} onChange={onEndTimeChange} value={timeState.end ? timeState.end : ""} className={timeState.ok && !duplicated ? 'level-item input ml-3 is-success' : 'level-item input ml-3 is-danger'} type={'time'}></input>
-                {isLastOne ? <TimeRangeAdd whenAdd={whenTimeRangeAdd} /> : <TimeRangeRemove whenRemove={() => {
+                {isLastOne && showAddButton ? <TimeRangeAdd whenAdd={whenTimeRangeAdd} /> : <TimeRangeRemove whenRemove={() => {
                     whenTimeRangeRemoved(id)
                 }} />}
             </div>
@@ -143,12 +143,13 @@ function TimeRangesController({ defaultTimeRanges, whenItDone }) {
 
     function renderTimeRanges(ranges) {
         const lastOne = ranges.length - 1
+        const showAddButton = ranges.length <= 5
         const rs = []
         ranges.forEach((range, index) => {
             const duplicated = checkIfTheRangeSameWithOneOfThem(range, ranges)
-            const timeRangePicker = <div key={index} className="field center">
+            const timeRangePicker = <div key={index} className="field center" style={{ 'marginRight': '10%' }}>
                 <div key={index} className="field">
-                    <TimeRangePicker duplicated={duplicated} id={index} defaultTimeRange={range ? range : []} whenItChange={updateTimeRangeWithId} isLastOne={index === lastOne} whenTimeRangeAdd={newTimeRange} whenTimeRangeRemoved={timeRangeRemoved} />
+                    <TimeRangePicker showAddButton={showAddButton} duplicated={duplicated} id={index} defaultTimeRange={range ? range : []} whenItChange={updateTimeRangeWithId} isLastOne={index === lastOne} whenTimeRangeAdd={newTimeRange} whenTimeRangeRemoved={timeRangeRemoved} />
                 </div>
             </div>
             rs.push(timeRangePicker)
@@ -162,12 +163,12 @@ function TimeRangesController({ defaultTimeRanges, whenItDone }) {
         setShowSaveButton(false)
     }
 
-    return <div className="center" style={{ 'height': '80%', marginLeft: '10%', marginRight: '10%' }}>
+    return <div className="center" style={{ 'height': '100%', marginLeft: '10%', marginTop: '6%' }}>
         <div className="box" style={{ 'width': '80%' }}>
-            <label className="label has-text-centered text-color text-font">{translate(mainPageKeyRef.labelOfTimeRanges)}</label>
+            <label className="label has-text-centered text-color text-font" style={{ 'marginRight': '10%' }}>{translate(mainPageKeyRef.labelOfTimeRanges)}</label>
             {renderTimeRanges(timeRanges)}
             {showSaveButton && <div className="has-text-centered mr-6">
-                <button onClick={flush} class="button is-primary">{translate(mainPageKeyRef.buttonLabelForSaveTimeRanges)}</button>
+                <button style={{ 'marginRight': '10%' }} onClick={flush} class="button is-primary">{translate(mainPageKeyRef.buttonLabelForSaveTimeRanges)}</button>
             </div>}
         </div>
     </div>

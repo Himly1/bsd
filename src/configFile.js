@@ -43,6 +43,19 @@ export function retreiveSelectedUsernames() {
     return config.onlyWorkForTheUsers
 }
 
+let callbackForCreateUser = null
+export function retreiveFuncForCreateNewUser() {
+    return (name, pwd) => {
+        config.usernames.push(name)
+        if (typeof callbackForCreateUser === 'function') {
+            callbackForCreateUser(name, pwd)
+        } else {
+            console.error(`No callback of create user exists`)
+            throw 'No callback for create user exists'
+        }
+    }
+}
+
 export function resetTimeRanges(ranges) {
     config.timeRangesNotAllowToUseTheComputer = ranges
     flush()
@@ -78,11 +91,12 @@ export function flush() {
 }
 
 //before run the app should run the init function and pass the cfg 
-export function init(cfg, callbackForSaveTheConfig) {
+export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser) {
     changeWithCode(cfg.language)
     Object.keys(config).forEach((key) => {
         config[key] = cfg[key]
     })
 
     callbackForWriteTheConfigToTheFile = callbackForSaveTheConfig
+    callbackForCreateUser = callbackOfCreateUser
 }

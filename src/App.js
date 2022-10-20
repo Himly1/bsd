@@ -5,7 +5,7 @@ import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
 import ParentalSettings from "./components/parentalSetting"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames } from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames } from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -34,7 +34,9 @@ function App() {
                 changeWithName(lng)
                 state.randomValuePresentChange = !state.randomValuePresentChange
                 setState(state)
-            }} lngOptions={getLanguageOptions()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()} />
+            }} lngOptions={getLanguageOptions()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
+                createNewUser={retreiveFuncForCreateNewUser()}
+            />
         }],
         [() => {
             return state.pwdSetUp && !state.loginSuccess
@@ -62,7 +64,7 @@ function App() {
         return test()
     })[1]
 
-    return <div style={{ 'height': '90%' }}>
+    return <div style={{ 'height': '80%' }}>
         <div>
             <div className="logo mt-3">
                 <Logo />
