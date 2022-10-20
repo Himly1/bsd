@@ -1,5 +1,5 @@
 
-import { useEffect, useReducer } from "react"
+import { useReducer } from "react"
 import Login from "./components/login"
 import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
