@@ -5,7 +5,7 @@ import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
 import ParentalSettings from "./components/parentalSetting"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, retreiveTimeRanges, resetTimeRanges } from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames } from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -21,9 +21,11 @@ function App() {
         [() => {
             return !state.pwdSetUp
         }, () => {
-            return <ParentalSettings whenSettingsDone={(pwd, qa) => {
+            return <ParentalSettings whenSettingsDone={(usernames, pwd, qa) => {
+                resetOnlyWorkForTheUsers(usernames)
                 updateParentPwd(pwd)
                 updateSecretQa(qa)
+
                 setState({
                     randomValuePresentChange: !state.randomValuePresentChange,
                     pwdSetUp: true
@@ -32,7 +34,7 @@ function App() {
                 changeWithName(lng)
                 state.randomValuePresentChange = !state.randomValuePresentChange
                 setState(state)
-            }} lngOptions={getLanguageOptions()} />
+            }} lngOptions={getLanguageOptions()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()} />
         }],
         [() => {
             return state.pwdSetUp && !state.loginSuccess

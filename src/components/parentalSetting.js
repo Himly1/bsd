@@ -169,10 +169,80 @@ function QaInput({ defaultQa, whenItDone }) {
     </div>
 }
 
+function ChooseUsernames({ usernames, selected, whenItDone }) {
+    const Objstate = usernames.reduce((rs, username) => {
+        const isSelected = selected.includes(username)
+        rs[username] = isSelected
+        return rs
+    }, {})
+    const [state, setState] = useReducer((p, n) => ({ ...p, ...n }), Objstate)
+
+    function updateTheUsernameState(username) {
+        state[username] = !state[username]
+        setState(state)
+    }
+
+    function getUsernamesOfUserSelected() {
+        return Object.entries(state).reduce((rs, [username, selected]) => {
+            if (selected) {
+                rs.push(username)
+            }
+            return rs
+        }, [])
+    }
+
+    function shouldShowNextButton() {
+        const userSelected = getUsernamesOfUserSelected()
+        return userSelected.length > 0
+    }
+
+    function renderUsernames() {
+        return Object.entries(state).reduce((rs, [username, isSelected]) => {
+            rs.push(
+                <div className="field" key={username}>
+                    <label className="checkbox is-large">
+                        <input className="is-large" onChange={(e) => {
+                            updateTheUsernameState(username)
+                        }} key={username} type='checkbox' checked={isSelected} />
+                        <span className="is-size-5">{username}</span>
+                    </label>
+                </div>
+            )
+            return rs
+        }, [])
+    }
+
+    function done() {
+        const selected = getUsernamesOfUserSelected()
+        whenItDone(selected)
+    }
+
+    return <div className="center" style={{ 'height': '80%' }}>
+        <form class="box">
+            <div class="field has-text-centered">
+                <label class="label">选择要限制的用户名</label>
+            </div>
+
+            <div class="field">
+                {renderUsernames()}
+            </div>
+            <div className="center">
+                {shouldShowNextButton() && <button onClick={done} className="button is-primary center">下一步</button>}
+            </div>
+        </form>
+    </div>
+}
 
 
-function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageChange, lngOptions }) {
-    const [pwd, setPwd] = useState({ pwd: defaultPwd, isDone: false })
+function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageChange, lngOptions, userNames, selectedUsernames }) {
+    const [pwd, setPwd] = useReducer((p, n) => ({ ...p, ...n }), { pwd: defaultPwd, isDone: false, userNameDone: false, usernameSelected: selectedUsernames })
+
+    function usernameDone(usernames) {
+        setPwd({
+            userNameDone: true,
+            usernameSelected: usernames
+        })
+    }
 
     function pwdDone(newPwd) {
         setPwd({
@@ -182,15 +252,15 @@ function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageC
     }
 
     function qaDone(qa) {
-        whenSettingsDone(pwd.pwd, qa)
+        whenSettingsDone(pwd.usernameSelected, pwd.pwd, qa)
     }
 
     return <div style={{ 'height': '100%' }}>
         <LngOptions whenLngChange={onLanguageChange} lngOptions={lngOptions} />
         {
-            pwd.isDone ?
+            pwd.userNameDone ? pwd.isDone ?
                 <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
-                <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
+                <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} /> : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} />
         }
     </div>
 }

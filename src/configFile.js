@@ -10,7 +10,9 @@ const config = {
     timeRangesNotAllowToUseTheComputer: [
 
     ],
-    language: 'cn'
+    language: 'cn',
+    onlyWorkForTheUsers: [],
+    usernames: []
 }
 
 export function isPwdSetUp() {
@@ -33,6 +35,14 @@ export function retreiveTimeRanges() {
     return config.timeRangesNotAllowToUseTheComputer
 }
 
+export function retreiveUsernames() {
+    return config.usernames
+}
+
+export function retreiveSelectedUsernames() {
+    return config.onlyWorkForTheUsers
+}
+
 export function resetTimeRanges(ranges) {
     config.timeRangesNotAllowToUseTheComputer = ranges
     flush()
@@ -51,6 +61,10 @@ export function updateSecretQa(qa) {
     }, {})
     config.qa = newQa
     flush()
+}
+
+export function resetOnlyWorkForTheUsers(usernames) {
+    config.onlyWorkForTheUsers = usernames
 }
 
 let callbackForWriteTheConfigToTheFile = null

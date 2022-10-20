@@ -20,7 +20,9 @@ initConfigFile({
   timeRangesNotAllowToUseTheComputer: [
 
   ],
-  language: 'en'
+  language: 'en',
+  onlyWorkForTheUsers: ['test'],
+  usernames: ['onTheRoad', 'test']
 }, (json) => {
   console.log(`writing the json to the file the json is ${JSON.stringify(json)}`)
 })
