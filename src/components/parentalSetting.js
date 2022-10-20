@@ -1,257 +1,198 @@
-import React, { useState } from "react";
-import './parentalSetting.scss'
-import { translate } from '../international/language'
-import { parentalSetting } from '../international/keyRefs'
-import Logo from './logo'
-import LanguageOption from "./LanguageOption";
+import React, { useReducer, useState, useEffect } from "react";
+import { translate, getNameOfCurrentLng } from '../international/language'
+import { parentalSettings } from '../international/keyRefs'
 
+function LngOptions({ whenLngChange, lngOptions }) {
 
-
-function titleComponent(title, subtitle) {
-    return <div className="level">
-        <div className="level-item has-text-centered">
-            <div className="title is-relative">
-                <h1 className="title text-color is-size-1-desktop">{translate(title)}</h1>
-                <h2 className="heading text-color mt-3 is-size-3-desktop">{translate(subtitle)}</h2>
-            </div>
-        </div>
-    </div>
-}
-
-class PasswordInput extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            showPwd: false,
-            pwd: props.pwd == null ? '' : props.pwd
-        }
-
-    }
-
-    showHidePwd = (e) => {
-        e.preventDefault()
-        this.setState((state) => {
-            return {
-                showPwd: !state.showPwd
-            }
-        })
-    }
-
-    passwordUpdated = (e) => {
-        e.preventDefault()
-        this.props.passwordUpdated(e.target.value)
-        this.setState((state) => {
-            state.pwd = e.target.value
-            return state
-        })
-    }
-
-    render() {
-        return <div className="column is-vcentered  is-8">
-            <div className="level">
-                {/* label */}
-                <div className="level-left">
-                    <label className="label text-font text-color is-size-3 level-item" style={{ 'width': '100%', 'margin': 0, 'padding': 0 }}>{translate(parentalSetting.passwordInputLabel)}</label>
-                </div>
-
-                <div className="level-item control has-icons-left">
-                    <input className="input" type={this.state.showPwd ? 'text' : 'password'} value={this.props.pwd == null ? "" : this.props.pwd} onChange={this.passwordUpdated} />
-                    <span className="icon is-small is-left">
-                        <i className={this.state.pwd.length >= 6 ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open'}></i>
-                    </span>
-
-                    <button className="button mr-6" onClick={this.showHidePwd}>
-                        <i className={this.state.showPwd ? 'fa-sharp fa-solid fa-eye' : 'fa-solid fa-eye-slash'}></i>
-                    </button>
-                </div>
-            </div>
-        </div >
-    }
-}
-
-class SecurtQa extends React.Component {
-    constructor(props) {
-        super(props)
-        const qa = props.globalState.secrectQa()
-        const questions = Object.keys(qa)
-        const defaultQuestion = questions[0]
-        this.state = {
-            questions: questions,
-            answer: qa[defaultQuestion],
-            currentQuestion: defaultQuestion,
-            finalQa: qa
-        }
-    }
-
-
-    qusetionChanged = (e) => {
-        e.preventDefault()
-        const options = e.target.options
-        const question = options[options.selectedIndex].label
-        this.setState((state) => {
-            state.currentQuestion = question
-            state.answer = state.finalQa[question]
-            return state
-        })
-    }
-
-    answerUpdated = (e) => {
-        e.preventDefault()
-        const answer = e.target.value
-        this.setState((state) => {
-            state.finalQa[state.currentQuestion] = answer
-            state.answer = answer
-            return state
-        })
-
-        this.props.answerUpdated(this.state.currentQuestion, answer)
-    }
-
-    cleanAnswer = (e) => {
-        e.preventDefault()
-        this.setState((state) => {
-            state.answer = ''
-            state.finalQa[state.currentQuestion] = ''
-            return state
-        })
-
-        e.target.value = ""
-        this.answerUpdated(e)
-    }
-
-    renderQuestions() {
-        return this.state.questions.reduce((rs, question) => {
-            rs.push(<option key={question}>
-                {question}
+    function renderOptions() {
+        return lngOptions.reduce((rs, option) => {
+            rs.push(<option key={option}>
+                {option}
             </option>)
-
             return rs
         }, [])
     }
 
-    render() {
-        return <div className="column is-vcentered  is-8">
-            {titleComponent(parentalSetting.qaTitle, parentalSetting.qaSubtitle)}
-            <div>
-                <div className="center">
-                    <div className="control has-icons-left">
-                        <div className="select" onChange={this.qusetionChanged}>
-                            <select>
-                                {this.renderQuestions()}
+    function languageChanged(e) {
+        const options = e.target.options
+        const language = options[options.selectedIndex].label
+        whenLngChange(language)
+    }
+
+    return <div style={{ 'width': '100%' }} >
+        <nav class="level">
+            <div className="level-item"></div>
+
+            <div class="level-right">
+                <div className="level-item">
+                    <div class="control has-icons-left">
+                        <div class="select is-success">
+                            <select defaultValue={getNameOfCurrentLng()} onChange={languageChanged} >
+                                {renderOptions()}
                             </select>
                         </div>
-                        <span className="icon is-left ">
-                            <i className="fa-solid fa-clipboard-question"></i>
+                        <span class="icon is-left">
+                            <i class="fa-solid fa-language"></i>
                         </span>
                     </div>
                 </div>
+            </div>
+        </nav>
+    </ div>
+}
 
-                <div className="column is-vcentered is-8 center" style={{ 'margin': 0, 'padding': 0, 'width': '100%' }}>
-                    <div className="level is-8" style={{ 'margin': 0, 'padding': 0, 'width': '100%' }}>
-                        <label className="label level-left text-color text-font is-size-3" style={{ 'margin': 0 }}>{translate(parentalSetting.qaInputLabel)}</label>
-                        <div className="control level-item has-icons-left">
-                            <input className='input is-focused ' type="text" value={this.state.answer} onChange={this.answerUpdated} />
-                            <span className="is-left icon">
-                                <i className={this.state.answer.length >= 6 ? 'fa-regular fa-circle-check' : "fa-regular fa-circle-xmark"}></i>
-                            </span>
-                            <button className="button" onClick={this.cleanAnswer}>
-                                <span className="icon is-small">
-                                    <i className="fa-regular fa-trash-can"></i>
-                                </span>
-                            </button>
+function PwdInput({ pwdUpdate, defaultPwd }) {
+
+    function isThePwdOk(password) {
+        return password !== null && password !== undefined && password.length >= 6
+    }
+
+    const [pwd, setPwd] = useState({ pwdOk: isThePwdOk(defaultPwd), pwd: defaultPwd })
+
+    function pwdChange(e) {
+        const password = e.target.value
+        setPwd({ pwdOk: isThePwdOk(password), pwd: password })
+    }
+
+    return <div className="center" style={{ 'height': '90%' }}>
+        <form class="box">
+            <div class="field">
+                <label class="label text-font text-color">{translate(parentalSettings.labelOfSettingPwd)}</label>
+                <h2 className="heading text-color">{translate(parentalSettings.SettingPwdSubtitle)}</h2>
+                <div class="control">
+                    <input onChange={pwdChange} defaultValue={defaultPwd} class={pwd.pwdOk ? 'input is-success' : 'input is-danger'} type="password" />
+                </div>
+            </div>
+            {pwd.pwdOk && <div className="field center">
+                <button onClick={() => {
+                    pwdUpdate(pwd.pwd)
+                }} class="button is-primary">{translate(parentalSettings.pwdSettingNextStepButtonLabel)}</button>
+            </div>}
+        </form>
+    </div>
+}
+
+function QaInput({ defaultQa, whenItDone }) {
+
+    function isTheAnswerIsOk(answer) {
+        return answer ? answer.length >= 2 : false
+    }
+
+    function isAllAnswerOk(qa) {
+        return Object.entries(qa).every(([_, answer]) => {
+            return isTheAnswerIsOk(answer)
+        })
+    }
+
+    const defaultQuestion = Object.keys(defaultQa)[0]
+    const answer = defaultQa[defaultQuestion]
+    const [qa, setQa] = useReducer((p, n) => ({ ...p, ...n }), {
+        currentQuestion: defaultQuestion,
+        answer: answer ? answer : "",
+        userQa: defaultQa,
+        allAnswerIsOk: isAllAnswerOk(defaultQa),
+        currentAnswerIsOk: answer ? answer.length >= 2 : false
+    })
+
+    useEffect(() => {
+        const defaultQuestions = Object.keys(defaultQa)
+        const questionsInState = Object.keys(qa.userQa)
+        if (defaultQuestions.toString() !== questionsInState.toString()) {
+            qa.currentQuestion = defaultQuestion[0]
+            qa.answer = qa.userQa[questionsInState[0]]
+            qa.userQa = defaultQa
+            qa.allAnswerIsOk = isAllAnswerOk(defaultQa)
+            qa.currentAnswerIsOk = qa.answer ? qa.answer.length >= 2 : false
+            setQa(qa)
+        }
+    })
+
+
+    function renderQuestions() {
+        const qusetions = Object.keys(qa.userQa)
+        return qusetions.reduce((rs, question) => {
+            rs.push(<option key={question} >{question}</option>)
+            return rs
+        }, [])
+    }
+
+    function answerUpdated(e) {
+        const newAnswer = e.target.value
+        qa.answer = newAnswer
+        qa.currentAnswerIsOk = newAnswer.length >= 2
+        qa.userQa[qa.currentQuestion] = newAnswer
+        qa.allAnswerIsOk = isAllAnswerOk(qa.userQa)
+
+        setQa(qa)
+    }
+
+    function questionChanged(e) {
+        const options = e.target.options
+        const question = options[options.selectedIndex].label
+        const answer = qa.userQa[question]
+
+        qa.currentAnswerIsOk = answer ? answer.length >= 2 : false
+        qa.answer = answer ? answer : ""
+        qa.currentQuestion = question
+        setQa(qa)
+    }
+
+    function done() {
+        whenItDone(qa.userQa)
+    }
+
+    return <div className="center" style={{ 'height': '80%' }}>
+        <form class="box">
+            <div class="field">
+                <label class="label has-text-centered text-font text-color">{translate(parentalSettings.qaLabel)}</label>
+                <h2 className="heading has-text-centered text-color">{translate(parentalSettings.qaSubTitle)}</h2>
+                <div className="field center">
+                    <div class="control has-icons-left">
+                        <div class={qa.allAnswerIsOk ? 'select is-success' : 'select is-danger'}>
+                            <select onChange={questionChanged}>
+                                {renderQuestions()}
+                            </select>
                         </div>
+                        <span class="icon is-left">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                        </span>
                     </div>
                 </div>
-            </div >
-        </div >
-    }
-}
-
-class Submit extends React.Component {
-    render() {
-        return <div className="column is-vcentered  is-8 ">
-            <div className="center">
-                <button type="submit" className={this.props.pwdOk && this.props.qaOk ? "button is-success" : "is-invisible"} onSubmit={this.props.onsubmit}>
-                    <span className="icon is-small">
-                        <i className="fas fa-check"></i>
-                    </span>
-                    <span>{translate(parentalSetting.saveButtonLabel)}</span>
-                </button>
+                <div className="field center">
+                    <input value={qa.answer} onChange={answerUpdated} className={qa.currentAnswerIsOk ? 'input is-success' : 'input is-danger'} />
+                </div>
             </div>
-        </div>
-    }
+            <div className="field has-text-centered">
+                {qa.allAnswerIsOk && <button onClick={done} class="button is-primary has-text-centered">{translate(parentalSettings.labelOfQaSaveButton)}</button>}
+            </div>
+        </form>
+    </div>
 }
 
-class Form extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            'pwdOk': false,
-            "qaOk": false,
-            'pwd': props.globalState.parentPwd(),
-            'qa': props.globalState.secrectQa
+
+
+function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageChange, lngOptions }) {
+    const [pwd, setPwd] = useState({ pwd: defaultPwd, isDone: false })
+
+    function pwdDone(newPwd) {
+        setPwd({
+            pwd: newPwd,
+            isDone: true
+        })
+    }
+
+    function qaDone(qa) {
+        whenSettingsDone(pwd.pwd, qa)
+    }
+
+    return <div style={{ 'height': '100%' }}>
+        <LngOptions whenLngChange={onLanguageChange} lngOptions={lngOptions} />
+        {
+            pwd.isDone ?
+                <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
+                <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
         }
-    }
-
-    passwordUpdated = (pwd) => {
-        this.setState((state) => {
-            state.pwd = pwd
-            state.pwdOk = pwd.length >= 6
-            return state
-        })
-    }
-
-    answerUpdated = (question, answer) => {
-        console.log(question, answer)
-        this.setState((state) => {
-            state.qa[question] = answer
-            state.qaOk = Object.entries(this.state.qa).every(([_, value]) => {
-                return value !== null && value.length >= 6
-            })
-            return state
-        })
-    }
-
-
-    onsubmit = () => {
-
-    }
-
-    render() {
-        return <div className="columns is-vcentered is-centered is-multiline">
-            <PasswordInput
-                pwd={this.state.pwd}
-                passwordUpdated={this.passwordUpdated}
-            />
-            <SecurtQa
-                globalState={this.props.globalState}
-                answerUpdated={this.answerUpdated}
-            />
-
-            <Submit
-                onSubmit={this.onsubmit}
-                qaOk={this.state.qaOk}
-                pwdOk={this.state.pwdOk}
-            />
-
-        </div>
-    }
+    </div>
 }
 
-class PasswordSetting extends React.Component {
-    render() {
-        return <div>
-            
-            <div className="center">
-                <Logo />
-            </div>
-            {titleComponent(parentalSetting.title, parentalSetting.subtitle)}
-            <Form
-                globalState={this.props.globalState}
-            />
-        </div>
-    }
-}
-
-
-export default PasswordSetting
+export default ParentalSettings

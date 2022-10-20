@@ -1,12 +1,20 @@
 {
-    "parentSettingPasswordInputLabel": "密码",
-    "parentalSettingTitle": "家长设置",
-    "parentalSettingSubtitle": "请设置家长密码及安全问题",
+    "labelOfSettingPwd": "密码设置",
+    "subtitleOfSettingPwd": "请设置密码以防孩子修改设置",
+    "labelOfNextStep": "下一步",
+    "qaLabel": "安全问题",
+    "qaSubTitle": "请设置安全问题以防忘记密码",
+    "labelOfSaveButton": "保存",
     "configQuestion1": "你最喜欢的一本书?",
-    "configQuestion2": "你最喜欢的一首音乐?",
+    "configQuestion2": "你最喜欢的一首歌?",
     "configQuestion3": "你最喜欢的一部电影?",
-    "parentalSettingQaTitle": "安全问题",
-    "parentalSettingQaSubtitle": "请设置安全问题以防止忘记密码",
-    "parentalQaInputLabel": "答案",
-    "parentalSettingSaveLabel": "保存"
+    "loginInputLabel": "密码",
+    "labelOfForgotPwd": "忘记密码",
+    "signLabel": "登录",
+    "labelOfRestPwd": "回答安全问题",
+    "resetPwdLabel": "重置密码",
+    "labelOfRstButton": "重置",
+    "labelOfTimeRanges": "设置禁止使用电脑时间段",
+    "labelOfParentalSetting": "家长设置",
+    "saveTimeRangeButtonLabel": "保存"
 }

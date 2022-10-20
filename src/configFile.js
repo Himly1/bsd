@@ -1,4 +1,4 @@
-import { translate, change, currentLanguage } from './international/language'
+import { translate, changeWithCode, getCodeOfCurrentLanguage, tranlsateTheKeyWithValue } from './international/language'
 
 const config = {
     parentPwd: null,
@@ -10,7 +10,11 @@ const config = {
     timeRangesNotAllowToUseTheComputer: [
 
     ],
-    language: '中文'
+    language: 'cn'
+}
+
+export function isPwdSetUp() {
+    return config.parentPwd !== null && config.parentPwd !== undefined
 }
 
 export function retriveParentPwd() {
@@ -18,47 +22,53 @@ export function retriveParentPwd() {
 }
 
 export function retriveSecretQa() {
-    return config.qa
+    return Object.entries(config.qa).reduce((rs, [key, value]) => {
+        const question = translate(key)
+        rs[question] = value
+        return rs
+    }, {})
 }
 
-export function addTimeRangeOfNotAllowToUseComputer([start, end]) {
-
+export function retreiveTimeRanges() {
+    return config.timeRangesNotAllowToUseTheComputer
 }
 
-export function removeTimeRangeOfNotAllowToUseComputer([start, end]) {
-
+export function resetTimeRanges(ranges) {
+    config.timeRangesNotAllowToUseTheComputer = ranges
+    flush()
 }
 
 export function updateParentPwd(newPwd) {
-
+    config.parentPwd = newPwd
+    flush()
 }
 
-export function updateSecretQa(question, answer) {
-
+export function updateSecretQa(qa) {
+    const newQa = Object.entries(qa).reduce((rs, [question, answer]) => {
+        const key = tranlsateTheKeyWithValue(question)
+        rs[key] = answer
+        return rs
+    }, {})
+    config.qa = newQa
+    flush()
 }
 
 let callbackForWriteTheConfigToTheFile = null
 export function flush() {
     //before flushing to the file change the question name first
     //save the language of use choosed to the configfile
-    const lng = currentLanguage()
+    const lng = getCodeOfCurrentLanguage()
     config.language = lng
 
-
+    callbackForWriteTheConfigToTheFile(config)
 }
 
 //before run the app should run the init function and pass the cfg 
 export function init(cfg, callbackForSaveTheConfig) {
-    const [_, renamedQa] = ['configQuestion1', 'configQuestion2', 'configQuestion3'].reduce((rs, internationalLanguageCode) => {
-        const [nameHardCodedQa, nameTranslatedQa] = rs
-        const theName = translate(internationalLanguageCode)
-        const theAnswer = nameHardCodedQa[internationalLanguageCode]
+    changeWithCode(cfg.language)
+    Object.keys(config).forEach((key) => {
+        config[key] = cfg[key]
+    })
 
-        nameTranslatedQa[theName] = theAnswer
-        rs[1] = nameTranslatedQa
-        return rs
-    }, [cfg.qa, {}])
-    config.qa = renamedQa
     callbackForWriteTheConfigToTheFile = callbackForSaveTheConfig
-    change(cfg.language)
 }

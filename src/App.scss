@@ -10,8 +10,12 @@ html,
 .board {
     // background-color: #001f3f;
     height: 100%;
-    font-family: "mashanzheng";
+    font-family: "Noto";
     background-color: rgb(226, 49, 232) // background-image: url('../public/background_image.jpg');
+}
+
+.gbc {
+    background-color: rgb(226, 49, 232)
 }
 
 .text-color {
@@ -19,16 +23,23 @@ html,
 }
 
 .text-font {
-    font-family: 'mashanzheng';
+    font-family: 'Noto';
 }
 
 @font-face {
-    font-family: 'mashanzheng';
-    src: local('mashanzheng'), url(./fonts/MaShanZheng.ttf)format('truetype');
+    font-family: 'Noto';
+    src: local('Noto'), url(./fonts/NotoSansSC.otf)format('truetype');
 }
 
 .center {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.logo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(calc(50vw - 50%));
 }

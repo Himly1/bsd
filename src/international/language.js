@@ -2,7 +2,7 @@ import cn from './cn.json'
 import en from './en.json'
 
 
-const nameCodeMapping = {}
+let nameCodeMapping = null
 const lngs = {
     'cn': {
         name: '中文',
@@ -13,34 +13,77 @@ const lngs = {
         languages: en
     }
 }
-Object.entries(lngs).reduce((lng) => {
-    const [key, value] = lng
-    nameCodeMapping[value.name] = key
-})
 
+function initTheNameCodeMapping() {
+    const mapping = Object.entries(lngs).reduce((rs, [key, value]) => {
+        rs[value.name] = key
+        return rs
+    }, {})
+    nameCodeMapping = mapping
+}
 
 let defaultCode = 'cn'
-
 export function getLanguageOptions() {
-    //set the codeNameMapping at sametime
     return Object.entries(lngs).reduce((rs, entry) => {
-        const [key, value] = entry
-        //set codeNameMapping
-        nameCodeMapping[value.name] = key
+        const [_, value] = entry
         rs.push(value.name)
         return rs
     }, [])
 }
 
-//Dont forget to rerender the language settings page
-export function change(name) {
-    defaultCode = nameCodeMapping[name]
+function NoSuchLanguageException(message) {
+    this.message = message
+    this.name = 'NoSuchLanguageException'
+}
+
+export function getLanguageCodeByName(name) {
+    const code = nameCodeMapping[name]
+    if (code == null || code == undefined) {
+        throw NoSuchLanguageException(name)
+    }
+
+    return code
+}
+
+function change(code) {
+    defaultCode = code
+}
+
+export function changeWithName(name) {
+    const code = getLanguageCodeByName(name)
+    change(code)
+}
+
+export function changeWithCode(code) {
+    const exists = Object.keys(lngs).includes(code)
+    if (!exists) {
+        throw NoSuchLanguageException('' + code)
+    }
+
+    change(code)
 }
 
 export function translate(key) {
     return lngs[defaultCode].languages[key]
 }
 
-export function currentLanguage() {
+export function tranlsateTheKeyWithValue(value) {
+    const [key, _] = Object.entries(lngs[defaultCode].languages).find(([_, v]) => {
+        return v === value
+    })
+
+    return key
+}
+
+export function getCodeOfCurrentLanguage() {
+    return defaultCode
+}
+
+
+export function getNameOfCurrentLng() {
     return lngs[defaultCode].name
+}
+
+export function init() {
+    initTheNameCodeMapping()
 }
