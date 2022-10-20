@@ -6,9 +6,9 @@
 >The user which has a children who cannot discipline themselves on playing computer. 有一个不懂得自律地使用电脑的孩子的用户
 
 ## How to use this app? 如何使用该程序?
->1.Install Nodejs on your main account. 在你的主账户安装Nodejs
->2.Download the app from release page.从release页面下载该程序
->3.Open the app as Administrators. 以管理员身份打开该程序
+>1.Install Nodejs on your main account. 在你的主账户安装Nodejs <br/>
+>2.Download the app from release page.从release页面下载该程序<br/>
+>3.Open the app as Administrators. 以管理员身份打开该程序<br/>
 
 ## How this app works? 该程序如何工作?
 >First this app let you choose the account names which should be limited.
