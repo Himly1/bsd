@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="300" height="200" src="https://i.imgur.com/FZfe3yz.png">
+</p>
+
 ## Who should use this app? 哪些用户应该使用该程序?
 >The user which has a children who cannot discipline themselves on playing computer. 有一个不懂得自律地使用电脑的孩子的用户
 
