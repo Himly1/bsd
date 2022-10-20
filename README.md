@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+```html
+<pre>
+    <div>
+        <h1>Who should use this app? 哪些用户应该使用该程序?</h1>
+        <h3>The user which has a children who cannot discipline themselves on playing computer</h3>
+        <h3>有一个不懂得自律地使用电脑的孩子的用户</h3>
+    </div>
+    
+    
+    <div>
+    	<h1>
+    	 How to use this app?
+    	 如何使用该程序?
+    	</h1>
+    	<ol>
+         <li>Install Nodejs on your main account. 
+         在你的主账户安装Nodejs</li>
+         <li>Download the app from release page.
+         从release页面下载该程序</li>
+         <li>Open the app as Administrators.
+         以管理员身份打开该程序</li>
+         </ol> 
+    	</h3>
+    </div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<div>
+    <h1>
+        How this app works?
+        该程序如何工作？
+    </h1>
+    
+    <div>
+        <p>
+            First this app let you choose the account names which should be limited 
+            then add the python program to the list of self-starts(Dont know how to name it. But you know what I mean anyway)
+            
+            the self-starts python program cannot be disable by any subaccount but Administrators accounts
+            
+            the self-starts python program check the time ranges and the username every second, if the current login account name and the time ranges match it will shuwdown computer Immediately
+        </p>
+        
+        <p>
+            首先该程序会让你选择一个或多个需要限制的用户名(对于不太懂电脑的人可能不知道Windows系统可以创建多个用户)
+            其次将一个python程序添加到开机自启列表中,该开机自启程序对于所有用户生效, 除了超级管理员无法禁止该开机自启项
+            该python程序每秒将检查当前登录的用户名和时间区间是否与设置当中的匹配，如果匹配则立即关机
+        </p>
+    </div>
+</div>
+ <div>
+     <h1>
+         QA
+     </h1>
+     
+     <div>
+         <h3>
+             What do I do if my child know how to bypass it ? 
+             我该怎么做如果我的孩子知道如何破解该程序?
+         </h3>
+         <p>
+             Well, it is not posibble for normal child if they dont know your account password, because the program setup in Administrators account which mean it is hard(for me because I am lazy) to bypass it in her account. But in some case her did it then this app can`t help with that it`s not a problem of this app but it`s your problem to tech her how to be self-discipline.
+         </p>
+         <p>
+             well. 这对于一般的孩子来讲是很难的，因为该程序是由主账户控制的，如果你的孩子不知道你的主账户密码，那么对于一般的孩子而言是非常困难的。如果你的孩子真的破解了该程序，那么恭喜她 she is on her way. 那么如何解决这个问题呢？ 该软件所解决的在很有限的范围内限制她，让她学会自律，如果她真的破解了该程序，那么这个问题就不是一个软件所能解决了的了，而是需要你去教会她如果学会自律，毕竟她已经能做到破解该程序，那么加上自律，前途不可限量。
+         </p>
+     </div>
+ </div>
+</pre>
+```
