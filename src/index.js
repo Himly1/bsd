@@ -22,7 +22,9 @@ initConfigFile({
   ],
   language: 'en',
   onlyWorkForTheUsers: ['test'],
-  usernames: ['onTheRoad', 'test']
+  usernames: ['onTheRoad', 'test'],
+  timeZones: { '中国': 'cn', '英国': 'uk' },
+  choosedTimeZone: 'uk'
 }, (json) => {
   console.log(`writing the json to the file the json is ${JSON.stringify(json)}`)
 })

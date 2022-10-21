@@ -12,7 +12,9 @@ const config = {
     ],
     language: 'cn',
     onlyWorkForTheUsers: [],
-    usernames: []
+    usernames: [],
+    timeZones: {},
+    choosedTimeZone: ""
 }
 
 export function isPwdSetUp() {
@@ -54,6 +56,27 @@ export function retreiveFuncForCreateNewUser() {
             throw 'No callback for create user exists'
         }
     }
+}
+
+//The struct of the config.timeZones is {'name of the time zone': 'code of the timezone'}
+export function retreiveTimezones() {
+    const namesOfTimeZones = Object.keys(config.timeZones)
+    return namesOfTimeZones
+}
+
+//the default time zone is code should return the name instead of code
+export function retrieveUserChoosedTimeZone() {
+    const [name, code] = Object.entries(config.timeZones).find(([name, code]) => {
+        return code === config.choosedTimeZone
+    })
+
+    return name
+}
+
+export function resetUserChoosedTimeZone(timeZone) {
+    const code = config.timeZones[timeZone]
+    config.choosedTimeZone = code
+    flush()
 }
 
 export function resetTimeRanges(ranges) {

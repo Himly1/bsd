@@ -319,9 +319,94 @@ function ChooseUsernames({ usernames, selected, whenItDone, createNewUser }) {
     </div >
 }
 
+function ChooseTimeZone({ timeZones, defaultTimeZone, whenItDone }) {
+    const [timeZoneState, setTimeZoneState] = useReducer((p, n) => ({ ...p, ...n }), {
+        userChoosed: defaultTimeZone
+    })
 
-function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageChange, lngOptions, userNames, selectedUsernames, createNewUser }) {
-    const [pwd, setPwd] = useReducer((p, n) => ({ ...p, ...n }), { pwd: defaultPwd, isDone: false, userNameDone: false, usernameSelected: selectedUsernames })
+    function timeZoneChanged(timezone) {
+        setTimeZoneState({
+            userChoosed: timezone
+        })
+    }
+
+    function toSameSizeChunks() {
+        const copy = [...timeZones]
+        const chunks = []
+        while (copy.length) {
+            chunks.push(copy.splice(0, 3))
+        }
+
+        return chunks
+    }
+
+    function renderTimeZones() {
+        const chunks = toSameSizeChunks()
+        return chunks.reduce((rs, chunk, index) => {
+            const optionsOfTheRow = chunk.reduce((rs, timezone) => {
+                const choosed = timezone === timeZoneState.userChoosed
+                rs.push(<div className="column" key={timezone} style={{ 'width': 220 }}>
+                    <label className="checkbox">
+                        <div className="center">
+                            <input onChange={(e) => {
+                                timeZoneChanged(timezone)
+                            }} key={timezone} type='checkbox' checked={choosed} />
+                            <span className="is-size-7">{timezone}</span>
+                        </div>
+                    </label>
+                </div>)
+                return rs
+            }, [])
+
+            rs.push(<div key={index} className="columns is-gapless" style={{ marginBottom: 0 }}>
+                {optionsOfTheRow}
+            </div>)
+
+            return rs
+        }, [])
+    }
+
+    function done() {
+        whenItDone(timeZoneState.userChoosed)
+    }
+
+    return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
+        <div className="box">
+            <div class="field has-text-centered">
+                <label class="label">请选择时区以防您的孩子修改时间</label>
+            </div>
+
+            <div className="field">
+                {renderTimeZones()}
+            </div>
+
+            <div className="center ">
+                {timeZoneState.userChoosed !== null ? <button onClick={done} className="button is-primary">下一步</button> : null}
+            </div>
+        </div>
+    </div>
+}
+
+function ParentalSettings({
+    whenSettingsDone,
+    defaultQa,
+    defaultPwd,
+    onLanguageChange,
+    lngOptions,
+    userNames,
+    selectedUsernames,
+    createNewUser,
+    timeZones,
+    userChoosedTimeZone }) {
+
+    const [pwd, setPwd] = useReducer((p, n) => ({ ...p, ...n }), { pwd: defaultPwd, isDone: false, userNameDone: false, timeZoneSetUp: false, timeZone: userChoosedTimeZone, usernameSelected: selectedUsernames })
+
+    function timeZoneDone(timezone) {
+        setPwd({
+            timeZone: timezone,
+            timeZoneSetUp: true
+        })
+    }
 
     function usernameDone(usernames) {
         setPwd({
@@ -338,15 +423,17 @@ function ParentalSettings({ whenSettingsDone, defaultQa, defaultPwd, onLanguageC
     }
 
     function qaDone(qa) {
-        whenSettingsDone(pwd.usernameSelected, pwd.pwd, qa)
+        whenSettingsDone(pwd.timeZone, pwd.usernameSelected, pwd.pwd, qa)
     }
 
     return <div style={{ 'height': '100%' }}>
         <LngOptions whenLngChange={onLanguageChange} lngOptions={lngOptions} />
         {
-            pwd.userNameDone ? pwd.isDone ?
-                <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
-                <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} /> : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUser={createNewUser} />
+            pwd.timeZoneSetUp ?
+                (pwd.userNameDone ? (pwd.isDone ?
+                    <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
+                    <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
+                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUser={createNewUser} />) : <ChooseTimeZone timeZones={timeZones} defaultTimeZone={userChoosedTimeZone} whenItDone={timeZoneDone} />
         }
     </div>
 }
