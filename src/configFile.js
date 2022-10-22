@@ -51,6 +51,7 @@ export function retreiveFuncForCreateNewUser() {
         config.usernames.push(name)
         if (typeof callbackForCreateUser === 'function') {
             callbackForCreateUser(name, pwd)
+            flush()
         } else {
             console.error(`No callback of create user exists`)
             throw 'No callback for create user exists'
@@ -101,6 +102,7 @@ export function updateSecretQa(qa) {
 
 export function resetOnlyWorkForTheUsers(usernames) {
     config.onlyWorkForTheUsers = usernames
+    flush()
 }
 
 let callbackForWriteTheConfigToTheFile = null

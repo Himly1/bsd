@@ -5,7 +5,7 @@ import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
 import ParentalSettings from "./components/parentalSetting"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retreiveTimezones, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone } from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retreiveTimezones, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone} from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -26,7 +26,6 @@ function App() {
                 resetOnlyWorkForTheUsers(usernames)
                 updateParentPwd(pwd)
                 updateSecretQa(qa)
-
                 setState({
                     randomValuePresentChange: !state.randomValuePresentChange,
                     pwdSetUp: true

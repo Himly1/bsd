@@ -7,27 +7,17 @@ import './fonts/NotoSansSC.otf'
 import { init as initConfigFile } from './configFile'
 import { init as initLanguage } from './international/language'
 import App from './App';
+import { getConfigFile, saveConfigFile, createNewUser } from './appDependency'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
-initLanguage()
-initConfigFile({
-  parentPwd: null,
-  qa: {
-    'configQuestion1': '123',
-    'configQuestion2': '123',
-    'configQuestion3': '123'
-  },
-  timeRangesNotAllowToUseTheComputer: [
+function load() {
+  getConfigFile().then((cfg) => {
+    initLanguage()
+    initConfigFile(cfg, saveConfigFile, createNewUser)
+    root.render(
+      <App />
+    )
+  })
+}
 
-  ],
-  language: 'en',
-  onlyWorkForTheUsers: ['test'],
-  usernames: ['onTheRoad', 'test'],
-  timeZones: { '中国': 'cn', '英国': 'uk' },
-  choosedTimeZone: 'uk'
-}, (json) => {
-  console.log(`writing the json to the file the json is ${JSON.stringify(json)}`)
-})
-root.render(
-  <App />
-)
+load()

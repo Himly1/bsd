@@ -1,0 +1,18 @@
+{
+    "parentPwd": null,
+    "qa": {
+      "configQuestion1": "123",
+      "configQuestion2": "123",
+      "configQuestion3": "123"
+    },
+    "timeRangesNotAllowToUseTheComputer": [],
+    "language": "en",
+    "onlyWorkForTheUsers": ["test"
+    ],
+    "usernames": ["onTheRoad", "test"
+    ],
+    "timeZones": { "中国": "cn", "英国": "uk"
+    },
+    "choosedTimeZone": "uk",
+    "supported": false
+}
