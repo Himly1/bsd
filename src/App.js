@@ -5,7 +5,7 @@ import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
 import ParentalSettings from "./components/parentalSetting"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retreiveTimezones, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone} from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone, retrieveTheCallbackForRefreshTimeZone} from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -36,7 +36,7 @@ function App() {
                 setState(state)
             }} lngOptions={getLanguageOptions()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
                 createNewUser={retreiveFuncForCreateNewUser()}
-                timeZones={retreiveTimezones()}
+                refreshTimeZoneAsync={retrieveTheCallbackForRefreshTimeZone()}
                 userChoosedTimeZone={retrieveUserChoosedTimeZone()}
             />
         }],

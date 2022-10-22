@@ -1,5 +1,20 @@
 import axios from 'axios'
 
+export async function refreshTimezone() {
+    try {
+        return axios.get('http://localhost:8888/timezone').then(response => {
+            if (response.status !== 200) {
+                throw response.data
+            } else {
+                return response.data
+            }
+        })
+    } catch (e) {
+        console.error(`error occrred while fetching the timezone. ${e}`)
+        throw e
+    }
+}
+
 export function saveConfigFile(config) {
     try {
         axios.put('http://localhost:8888/config', config).then(response => {

@@ -11,8 +11,6 @@
     ],
     "usernames": ["onTheRoad", "test"
     ],
-    "timeZones": { "中国": "cn", "英国": "uk"
-    },
     "choosedTimeZone": "uk",
     "supported": false
 }

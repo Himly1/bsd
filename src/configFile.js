@@ -13,7 +13,6 @@ const config = {
     language: 'cn',
     onlyWorkForTheUsers: [],
     usernames: [],
-    timeZones: {},
     choosedTimeZone: ""
 }
 
@@ -59,24 +58,17 @@ export function retreiveFuncForCreateNewUser() {
     }
 }
 
-//The struct of the config.timeZones is {'name of the time zone': 'code of the timezone'}
-export function retreiveTimezones() {
-    const namesOfTimeZones = Object.keys(config.timeZones)
-    return namesOfTimeZones
+let refreshTimeZoneCallback = null
+export function retrieveTheCallbackForRefreshTimeZone() {
+    return refreshTimeZoneCallback
 }
 
-//the default time zone is code should return the name instead of code
 export function retrieveUserChoosedTimeZone() {
-    const [name, code] = Object.entries(config.timeZones).find(([name, code]) => {
-        return code === config.choosedTimeZone
-    })
-
-    return name
+    return config.choosedTimeZone
 }
 
 export function resetUserChoosedTimeZone(timeZone) {
-    const code = config.timeZones[timeZone]
-    config.choosedTimeZone = code
+    config.choosedTimeZone = timeZone
     flush()
 }
 
@@ -116,7 +108,7 @@ export function flush() {
 }
 
 //before run the app should run the init function and pass the cfg 
-export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser) {
+export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser, refreshTimeZone) {
     changeWithCode(cfg.language)
     Object.keys(config).forEach((key) => {
         config[key] = cfg[key]
@@ -124,4 +116,5 @@ export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser) {
 
     callbackForWriteTheConfigToTheFile = callbackForSaveTheConfig
     callbackForCreateUser = callbackOfCreateUser
+    refreshTimeZoneCallback = refreshTimeZone
 }

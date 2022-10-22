@@ -25,6 +25,11 @@
     "labelOfTimeRanges": "设置禁止使用电脑时间段",
     "labelOfParentalSetting": "家长设置",
     "saveTimeRangeButtonLabel": "保存",
-    "labelOfChooseTimeZone": "为防止你的孩子修改时间请选择你所在的时区",
-    "labelOfNextButtonOfChooseTimeZone": "下一步"
+    "labelOfConfirmTimeZone": "为防止您的孩子改变时间和时区，请确认时区",
+    "labelOfNextButtonOfComfirmTimeZone": "下一步",
+    "subtitleOfConfirmTimezone": "如果时区不正确，请纠正你的操作系统的时区并点击刷新按钮",
+    "labelOfRefreshTimezoneButton": "刷新",
+    "labelOfShowTimezone": "时区: ",
+    "labelOfShowCurrentTime": "时间: ",
+    "labelOfTheErrorOnRefresh": "刷新时区时发生了错误,请在GITHUB页面提交问题"
 }

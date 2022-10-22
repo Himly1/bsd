@@ -25,6 +25,11 @@
     "labelOfTimeRanges": "Set time ranges for limit the child to play computer",
     "labelOfParentalSetting": "Parental Settings",
     "saveTimeRangeButtonLabel": "Save",
-    "labelOfChooseTimeZone": "To prevent your child from changing the time please select your time zone",
-    "labelOfNextButtonOfChooseTimeZone": "Next"
+    "labelOfConfirmTimeZone": "To prevent your child from changing the time and timezone please confirm your timezone",
+    "labelOfNextButtonOfComfirmTimeZone": "Next",
+    "subtitleOfConfirmTimezone":"If the timezone not correct please correct your OS timezone and click refresh button",
+    "labelOfRefreshTimezoneButton": "Refresh",
+    "labelOfShowTimezone": "Timezone: ",
+    "labelOfShowCurrentTime": "The time should be: ",
+    "labelOfTheErrorOnRefresh": "Error occurred while refreshing the timezone please submit an issue on the GitHub page"
 }

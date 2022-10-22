@@ -319,69 +319,93 @@ function ChooseUsernames({ usernames, selected, whenItDone, createNewUser }) {
     </div >
 }
 
-function ChooseTimeZone({ timeZones, defaultTimeZone, whenItDone }) {
+function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
+
     const [timeZoneState, setTimeZoneState] = useReducer((p, n) => ({ ...p, ...n }), {
-        userChoosed: defaultTimeZone
+        userChoosed: defaultTimeZone,
+        time: formatTheTimeOfNow(),
+        timerId: null,
+        errOnRefresh: null
     })
 
-    function timeZoneChanged(timezone) {
+    function formatTheTimeOfNow() {
+        return (new Date()).toLocaleTimeString('en-US', {
+            hour12: false
+        }).slice(0, 19).replace(/-/g, "/").replace("T", " ")
+    }
+
+    function tick() {
         setTimeZoneState({
-            userChoosed: timezone
+            time: formatTheTimeOfNow()
         })
     }
 
-    function toSameSizeChunks() {
-        const copy = [...timeZones]
-        const chunks = []
-        while (copy.length) {
-            chunks.push(copy.splice(0, 3))
+
+    useEffect(() => {
+        const err = translate(parentalSettings.labelOfTheErrorOnRefresh)
+        if(timeZoneState && err !== timeZoneState.errOnRefresh) {
+            setTimeZoneState({
+                errOnRefresh: err
+            })
         }
 
-        return chunks
-    }
+        if (timeZoneState.timerId === null) {
+            const timerId = setInterval(() => {
+                tick()
+            }, 1000)
 
-    function renderTimeZones() {
-        const chunks = toSameSizeChunks()
-        return chunks.reduce((rs, chunk, index) => {
-            const optionsOfTheRow = chunk.reduce((rs, timezone) => {
-                const choosed = timezone === timeZoneState.userChoosed
-                rs.push(<div className="column" key={timezone} style={{ 'width': 220 }}>
-                    <label className="checkbox">
-                        <div className="center">
-                            <input onChange={(e) => {
-                                timeZoneChanged(timezone)
-                            }} key={timezone} type='checkbox' checked={choosed} />
-                            <span className="is-size-7">{timezone}</span>
-                        </div>
-                    </label>
-                </div>)
-                return rs
-            }, [])
+            setTimeZoneState({
+                timerId: timerId
+            })
+        }
+    })
 
-            rs.push(<div key={index} className="columns is-gapless" style={{ marginBottom: 0 }}>
-                {optionsOfTheRow}
-            </div>)
-
-            return rs
-        }, [])
+    function refreshTimezone() {
+        const timezone = refreshAysncFunc().then((timezone) => {
+            setTimeZoneState({
+                userChoosed: timezone,
+                errOnRefresh: null
+            })
+        }).catch((err) => {
+            setTimeZoneState({
+                errOnRefresh: translate(parentalSettings.labelOfTheErrorOnRefresh)
+            })
+        })
     }
 
     function done() {
+        clearInterval(timeZoneState.timerId)
         whenItDone(timeZoneState.userChoosed)
     }
 
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
         <div className="box">
             <div class="field has-text-centered">
-                <label class="label">{translate(parentalSettings.labelOfChooseTimeZone)}</label>
+                <label class="label">{translate(parentalSettings.labelOfConfirmTimezone)}</label>
+                <label className="heading">{translate(parentalSettings.subtitleOfConfirmTimezone)}</label>
+                {timeZoneState.errOnRefresh && <label className="heading has-text-danger">{timeZoneState.errOnRefresh}</label>}
             </div>
 
             <div className="field">
-                {renderTimeZones()}
+                <div className="columns is-gapless" style={{ 'marginBottom': 0 }}>
+                    <div className="column">
+                        <label className="label is-size-4 has-text-centered">{translate(parentalSettings.labelOfShowTimezone)} {timeZoneState.userChoosed}</label>
+                    </div>
+                </div>
+
+                <div className="columns is-gapless" style={{ 'marginBottom': 0 }}>
+                    <div className="column">
+                        <label className="label is-size-4 has-text-centered">{translate(parentalSettings.labelOfShowCurrentTime)} {timeZoneState.time}</label>
+                    </div>
+                </div>
             </div>
 
-            <div className="center ">
-                {timeZoneState.userChoosed !== null ? <button onClick={done} className="button is-primary">{translate(parentalSettings.labelOfNextButtonOfChooseTimeZone)}</button> : null}
+
+            <div className="center">
+                <div>
+                    <button onClick={refreshTimezone} className="button is-warning">{translate(parentalSettings.labelOfRefreshTimezoneButton)}</button>
+                </div>
+                {timeZoneState.userChoosed !== null ? <button onClick={done} className="button is-primary ml-5">{translate(parentalSettings.labelOfNextButtonOfConfirmTimezone)}</button> : null}
             </div>
         </div>
     </div>
@@ -396,7 +420,7 @@ function ParentalSettings({
     userNames,
     selectedUsernames,
     createNewUser,
-    timeZones,
+    refreshTimeZoneAsync,
     userChoosedTimeZone }) {
 
     const [pwd, setPwd] = useReducer((p, n) => ({ ...p, ...n }), { pwd: defaultPwd, isDone: false, userNameDone: false, timeZoneSetUp: false, timeZone: userChoosedTimeZone, usernameSelected: selectedUsernames })
@@ -433,7 +457,7 @@ function ParentalSettings({
                 (pwd.userNameDone ? (pwd.isDone ?
                     <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
                     <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
-                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUser={createNewUser} />) : <ChooseTimeZone timeZones={timeZones} defaultTimeZone={userChoosedTimeZone} whenItDone={timeZoneDone} />
+                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUser={createNewUser} />) : <ConfirmTimeZone defaultTimeZone={userChoosedTimeZone} refreshAysncFunc={refreshTimeZoneAsync} whenItDone={timeZoneDone} />
         }
     </div>
 }

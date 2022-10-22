@@ -13,8 +13,13 @@ export const parentalSettings = {
     labelOfNewUserConfirmButton: "labelOfConfirmButton",
     labelOfNewUserCancelButton: "labelOfCancelButton",
     errorTextOfUnableToCreateUser: "errTextOfCreateUser",
-    labelOfChooseTimeZone: "labelOfChooseTimeZone",
-    labelOfNextButtonOfChooseTimeZone: "labelOfNextButtonOfChooseTimeZone"
+    labelOfConfirmTimezone: "labelOfConfirmTimeZone",
+    labelOfNextButtonOfConfirmTimezone: "labelOfNextButtonOfComfirmTimeZone",
+    subtitleOfConfirmTimezone: "subtitleOfConfirmTimezone",
+    labelOfRefreshTimezoneButton: "labelOfRefreshTimezoneButton",
+    labelOfShowTimezone: "labelOfShowTimezone",
+    labelOfShowCurrentTime: "labelOfShowCurrentTime",
+    labelOfTheErrorOnRefresh: "labelOfTheErrorOnRefresh"
 }
 
 export const login = {
