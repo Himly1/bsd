@@ -28,7 +28,7 @@ const waysOfGetThePathOfThePythonProgram = {
 //therefore there should be a way to flush the new config to the config file of python program dependes on
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
-    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
+    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
     fs.copyFileSync('./../config.json', pathOfSelfStarts)
   }
 }
@@ -36,7 +36,7 @@ const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
 //how to set the python program as self starts
 const waysOfSetPythonProgramAsSelfStarts = {
   'win32': () => {
-    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
+    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsd.pyw'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
     fs.copyFileSync(pythonPath, pathOfSelfStarts)
   }
@@ -48,7 +48,7 @@ const waysOfGetAllLocalTimeZones = {
     
   },
   forExplore: () => {
-
+    
   }
 }
 
