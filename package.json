@@ -13,6 +13,7 @@
     "bulma": "^0.9.4",
     "electron-forge": "^5.2.4",
     "express": "^4.18.2",
+    "node-cmd": "^5.0.0",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,10 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "elec": "npm run build && electron .",
-    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron .",
-    "make-linux": "react-scripts build && electron-forge make --platform linux"
+    "elec": "npm run build && electron ."
   },
   "eslintConfig": {
     "extends": [
