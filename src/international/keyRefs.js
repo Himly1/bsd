@@ -12,7 +12,9 @@ export const parentalSettings = {
     labelOfNewUserPwd: "labelOfNewUserPwd",
     labelOfNewUserConfirmButton: "labelOfConfirmButton",
     labelOfNewUserCancelButton: "labelOfCancelButton",
-    errorTextOfUnableToCreateUser: "errTextOfCreateUser"
+    errorTextOfUnableToCreateUser: "errTextOfCreateUser",
+    labelOfChooseTimeZone: "labelOfChooseTimeZone",
+    labelOfNextButtonOfChooseTimeZone: "labelOfNextButtonOfChooseTimeZone"
 }
 
 export const login = {

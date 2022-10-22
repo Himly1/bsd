@@ -24,5 +24,7 @@
     "labelOfRstButton": "Reset",
     "labelOfTimeRanges": "Set time ranges for limit the child to play computer",
     "labelOfParentalSetting": "Parental Settings",
-    "saveTimeRangeButtonLabel": "Save"
+    "saveTimeRangeButtonLabel": "Save",
+    "labelOfChooseTimeZone": "To prevent your child from changing the time please select your time zone",
+    "labelOfNextButtonOfChooseTimeZone": "Next"
 }

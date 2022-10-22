@@ -373,7 +373,7 @@ function ChooseTimeZone({ timeZones, defaultTimeZone, whenItDone }) {
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
         <div className="box">
             <div class="field has-text-centered">
-                <label class="label">请选择时区以防您的孩子修改时间</label>
+                <label class="label">{translate(parentalSettings.labelOfChooseTimeZone)}</label>
             </div>
 
             <div className="field">
@@ -381,7 +381,7 @@ function ChooseTimeZone({ timeZones, defaultTimeZone, whenItDone }) {
             </div>
 
             <div className="center ">
-                {timeZoneState.userChoosed !== null ? <button onClick={done} className="button is-primary">下一步</button> : null}
+                {timeZoneState.userChoosed !== null ? <button onClick={done} className="button is-primary">{translate(parentalSettings.labelOfNextButtonOfChooseTimeZone)}</button> : null}
             </div>
         </div>
     </div>

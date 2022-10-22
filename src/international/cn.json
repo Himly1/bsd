@@ -24,5 +24,7 @@
     "labelOfRstButton": "重置",
     "labelOfTimeRanges": "设置禁止使用电脑时间段",
     "labelOfParentalSetting": "家长设置",
-    "saveTimeRangeButtonLabel": "保存"
+    "saveTimeRangeButtonLabel": "保存",
+    "labelOfChooseTimeZone": "为防止你的孩子修改时间请选择你所在的时区",
+    "labelOfNextButtonOfChooseTimeZone": "下一步"
 }
