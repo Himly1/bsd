@@ -143,9 +143,18 @@ function setUpExpressServer() {
     res.status(200).send()
   }
 
+  function refreshTimeZoneAndReturn(req, res) {
+    //get current timezone
+    //sync with the timezone
+    //return the timezone
+
+    return res.status(200).send('test')
+  }
+
   exApp.get('/config', configFile)
   exApp.put('/config', saveConfigFile)
   exApp.post('/users', newUser)
+  exApp.get('/timezone', refreshTimeZoneAndReturn)
 
   exApp.listen(8888)
 }
@@ -190,5 +199,5 @@ function loadElectronWindow() {
 
 // setThePythonFileAsSelfStarts()
 // loadTheConfigFromFile()
-// setUpExpressServer()
+setUpExpressServer()
 // loadElectronWindow()
