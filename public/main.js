@@ -205,6 +205,9 @@ function loadElectronWindow() {
     const win = new BrowserWindow({
       width: 800,
       height: 800,
+      title: "BSD",
+      autoHideMenuBar: true,
+      icon: __dirname + "/logo.ico",
       webPreferences: {
         nodeIntegration: true,
       },

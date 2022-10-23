@@ -50,5 +50,7 @@
     "@electron-forge/maker-dmg": "^6.0.0-beta.67",
     "electron": "^21.2.0",
     "sass": "^1.55.0"
-  }
+  },
+  "author": "zhengMa",
+  "repository": "https://github.com/Himly1/bsd"
 }
