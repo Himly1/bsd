@@ -1,1 +1,15 @@
-{"parentPwd":"147852","qa":{"configQuestion1":"知行合一去","configQuestion2":"Tower of song去","configQuestion3":"我的人生比电影精彩多了去"},"timeRangesNotAllowToUseTheComputer":[["22:19","21:20"]],"language":"cn","onlyWorkForTheUsers":["OnTheRoad"],"usernames":["OnTheRoad"],"choosedTimeZone":"China Standard Time","supported":true}
+{
+    "parentPwd": null,
+    "qa": {
+        "configQuestion1": "知行合一",
+        "configQuestion2": "《Tower of song》by Leonard Cohen",
+        "configQuestion3": "我的人生比电影精彩多了"
+    },
+    "timeRangesNotAllowToUseTheComputer": [],
+    "language": "cn",
+    "onlyWorkForTheUsers": [
+    ],
+    "usernames": [],
+    "choosedTimeZone": null,
+    "supported": false
+}
