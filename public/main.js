@@ -12,7 +12,7 @@ const platform = process.platformst
 const currentUsername = os.userInfo().username
 let config = {}
 
-const forExpore = "forExplore"
+const forExplore = "forExplore"
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -28,7 +28,7 @@ const waysOfGetThePathOfThePythonProgram = {
 //therefore there should be a way to flush the new config to the config file of python program dependes on
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
-    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
+    const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
     fs.copyFileSync('./../config.json', pathOfSelfStarts)
   }
 }
@@ -36,25 +36,19 @@ const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
 //how to set the python program as self starts
 const waysOfSetPythonProgramAsSelfStarts = {
   'win32': () => {
-    const pathOfSelfStarts = 'C:\\Users\\' + username + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsd.pyw'
+    const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsd.pyw'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
     fs.copyFileSync(pythonPath, pathOfSelfStarts)
   }
 }
 
-//how to get the timezones from local as local language
-const waysOfGetAllLocalTimeZones = {
+
+const waysOfGetDefaultTimeZone = {
   win32: () => {
     
   },
   forExplore: () => {
-    
-  }
-}
-
-const waysOfGetDefaultTimeZone = {
-  win32: () => {
-
+    return "Hello world, goodbye world, hello world"
   }
 }
 
@@ -72,6 +66,9 @@ const waysOfGetTheRealUsernamesOfCurrentOs = {
   win32: () => {
     //There is fake username in windows, like guest something
 
+  },
+  forExplore: () => {
+    return ['Humble', 'OnTheRoad', 'OnMyWay']
   }
 }
 
@@ -92,15 +89,15 @@ function setThePythonFileAsSelfStarts() {
 function loadTheConfigFromFile() {
   config = JSON.parse(fs.readFileSync('./../config.json', 'utf8'))
   [
-    ['timeZones', waysOfGetAllLocalTimeZones],
+    ['choosedTimeZone', waysOfGetDefaultTimeZone]
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
   ].foreach((meta) => {
     const configName = meta[0]
-    const valueOfExporeFunc = meta[1][forExpore]
+    const valueOfExporeFunc = meta[1][forExplore]
     const valueFunc = meta[1][platform]
-    if(valueFunc) {
+    if (valueFunc) {
       config[configName] = valueFunc()
-    }else {
+    } else {
       config[configName] = valueOfExporeFunc()
     }
   })
@@ -114,7 +111,7 @@ function saveTheConfigToTheFile() {
   })
   const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
   if (flushToPythonProgram) {
-    flushToPythonProgram(config)
+    flushToPythonProgram()
   }
 }
 
@@ -144,11 +141,16 @@ function setUpExpressServer() {
   }
 
   function refreshTimeZoneAndReturn(req, res) {
-    //get current timezone
-    //sync with the timezone
-    //return the timezone
+    const forExplore = waysOfGetDefaultTimeZone[forExplore]
+    const timezoneFuc = waysOfGetDefaultTimeZone[platform]
+    const timezone = [forExplore, timezoneFuc].reduce((rs, fuc) => {
+      if (fuc) {
+        rs = fuc()
+      }
+      return rs
+    }, "")
 
-    return res.status(200).send('test')
+    return res.status(200).send(timezone)
   }
 
   exApp.get('/config', configFile)
@@ -197,7 +199,7 @@ function loadElectronWindow() {
   });
 }
 
-// setThePythonFileAsSelfStarts()
-// loadTheConfigFromFile()
+setThePythonFileAsSelfStarts()
+loadTheConfigFromFile()
 setUpExpressServer()
 // loadElectronWindow()
