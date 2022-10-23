@@ -7,8 +7,9 @@ exApp.use(express.json())
 const fs = require('fs')
 const process = require('process')
 const os = require('os')
+const cmd = require('node-cmd')
 
-const platform = process.platformst
+const platform = process.platform
 const currentUsername = os.userInfo().username
 const supported = ['win32'].includes(platform)
 let config = {}
@@ -21,7 +22,7 @@ const forExplore = "forExplore"
 //which python program should be set as self starts
 const waysOfGetThePathOfThePythonProgram = {
   win32: () => {
-    return './../pythonScripts/win32.pyw'
+    return './pythonScripts/win32.pyw'
   }
 }
 
@@ -39,14 +40,19 @@ const waysOfSetPythonProgramAsSelfStarts = {
   win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsd.pyw'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
-    fs.copyFileSync(pythonPath, pathOfSelfStarts)
+    fs.copyFileSync(pythonPath(), pathOfSelfStarts)
   }
 }
 
 
 const waysOfGetDefaultTimeZone = {
   win32: () => {
+    const { data, err, stderr } = cmd.runSync('tzutil /g')
+    if (err && stderr) {
+      throw err.toString() + stderr.toString()
+    }
 
+    return data
   },
   forExplore: () => {
     return "Hello world, goodbye world, hello world"
@@ -56,7 +62,11 @@ const waysOfGetDefaultTimeZone = {
 //how to create new user(e.g.. Maybe name it as new account more suitable but you know what I mean anyway)
 const waysOfCreateNewUser = {
   win32: ({ username, pwd }) => {
-
+    const command = `net user ${username} ${pwd} /ADD`
+    const { data, err, stderr } = cmd.runSync(command)
+    if (err || stderr) {
+      throw err.toString() + stderr.toString()
+    }
   }
 }
 
@@ -66,7 +76,22 @@ const waysOfCreateNewUser = {
 const waysOfGetTheRealUsernamesOfCurrentOs = {
   win32: () => {
     //There is fake username in windows, like guest something
+    const { data, err, stderr } = cmd.runSync('wmic useraccount get name')
+    if (err || stderr) {
+      throw err.toString() + stderr.toString()
+    }
 
+    const pureUsernames = data.split('\n').reduce((rs, name) => {
+      const pureName = name.replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "")
+      rs.push(pureName)
+      return rs
+    }, [])
+    const validUsernames = pureUsernames.filter((name) => {
+      const invalid = ['', 'Name', 'Administrator', 'DefaultAccount', 'Guest', 'WDAGUtilityAccount'].includes(name)
+      return !invalid
+    })
+
+    return validUsernames
   },
   forExplore: () => {
     return ['Humble', 'OnTheRoad', 'OnMyWay']
@@ -90,13 +115,11 @@ function setThePythonFileAsSelfStarts() {
 
 function loadTheConfigFromFile() {
   config = JSON.parse(fs.readFileSync('public/config.json', 'utf8'))
-  console.log(`config ? ${Object.keys(config)}`)
   const metas = [
     ['choosedTimeZone', waysOfGetDefaultTimeZone],
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
   ]
   metas.forEach((meta) => {
-    console.log(`meta ? ${meta}`)
     const configName = meta[0]
     const valueOfExporeFunc = meta[1][forExplore]
     const valueFunc = meta[1][platform]
@@ -129,37 +152,43 @@ function createNewUser(username, pwd) {
 
 function setUpExpressServer() {
   function configFile(req, res) {
-    console.log(`requesting config `)
     res.status(200).send(config)
   }
 
   function saveConfigFile(req, res) {
-    console.log(`saving config and the config is ${req.body}`)
     config = req.body
     saveTheConfigToTheFile()
     res.status(200).send()
   }
 
   function newUser(req, res) {
-    const username = req.body.username
-    const password = req.body.pwd
-    console.log(`new user ? ${username} ${password}`)
-    createNewUser(username, password)
-    res.status(200).send()
+    try {
+      const username = req.body.username
+      const password = req.body.pwd
+      createNewUser(username, password)
+      res.status(200).send()
+    } catch (err) {
+      console.error(`err occrred while creating new user. err: ${err}`)
+      res.status(500).send()
+    }
   }
 
   function refreshTimeZoneAndReturn(req, res) {
-    console.log(`refresh time zone`)
-    const forExploreFuc = waysOfGetDefaultTimeZone[forExplore]
-    const timezoneFuc = waysOfGetDefaultTimeZone[platform]
-    const timezone = [forExploreFuc, timezoneFuc].reduce((rs, fuc) => {
-      if (fuc) {
-        rs = fuc()
-      }
-      return rs
-    }, "")
+    try {
+      const forExploreFuc = waysOfGetDefaultTimeZone[forExplore]
+      const timezoneFuc = waysOfGetDefaultTimeZone[platform]
+      const timezone = [forExploreFuc, timezoneFuc].reduce((rs, fuc) => {
+        if (fuc) {
+          rs = fuc()
+        }
+        return rs
+      }, "")
 
-    return res.status(200).send(timezone)
+      return res.status(200).send(timezone)
+    } catch (e) {
+      console.error(`err occrred while refreshing the timezone. ${e}`)
+      res.status(500).send()
+    }
   }
 
   exApp.get('/config', configFile)

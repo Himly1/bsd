@@ -152,23 +152,16 @@ function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
     }
 
     function create() {
-        try {
-            createNewUserAsync(nameAndPwd.name, nameAndPwd.pwd).then(() => {
-                setNameAndPwd({
-                    err: null
-                })
-                whenUserCreated(nameAndPwd.name)
-            }).catch((err => {
-                setNameAndPwd({
-                    err: err
-                })
-            }))
-        } catch (e) {
-            console.error(`err occurred while creating the user. err ? ${e}`)
+        createNewUserAsync(nameAndPwd.name, nameAndPwd.pwd).then(() => {
             setNameAndPwd({
-                err: e
+                err: null
             })
-        }
+            whenUserCreated(nameAndPwd.name)
+        }).catch((err => {
+            setNameAndPwd({
+                err: err
+            })
+        }))
     }
 
     function cancel() {
@@ -347,7 +340,6 @@ function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
         whenItDone(timeZoneState.userChoosed)
     }
 
-    console.log(`err ? ${timeZoneState.errOnRefresh !== null}`)
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
         <div className="box">
             <div class="field has-text-centered">
@@ -359,13 +351,13 @@ function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
             <div className="field">
                 <div className="columns is-gapless" style={{ 'marginBottom': 0 }}>
                     <div className="column">
-                        <label className="label is-size-4 has-text-centered">{translate(parentalSettings.labelOfShowTimezone)} {timeZoneState.userChoosed}</label>
+                        <label className="label is-size-6 has-text-centered">{translate(parentalSettings.labelOfShowTimezone)} {timeZoneState.userChoosed}</label>
                     </div>
                 </div>
 
                 <div className="columns is-gapless" style={{ 'marginBottom': 0 }}>
                     <div className="column">
-                        <label className="label is-size-4 has-text-centered">{translate(parentalSettings.labelOfShowCurrentTime)} {timeZoneState.time}</label>
+                        <label className="label is-size-6 has-text-centered">{translate(parentalSettings.labelOfShowCurrentTime)} {timeZoneState.time}</label>
                     </div>
                 </div>
             </div>

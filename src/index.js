@@ -9,13 +9,16 @@ import { init as initLanguage } from './international/language'
 import App from './App';
 import { getConfigFile, saveConfigFile, createNewUser, refreshTimezone } from './appDependency'
 
+//this line of code not working in the windwos env dont know why
 //this from the package.json dependecies and pointed to the 'public/config.json'
-import cfg from 'config-json'
+// import cfg from 'config-json'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 function loadWithTest() {
   initLanguage()
-  initConfigFile(cfg, (cfg) => {
+  //replace the first argument with actual config
+  //on linux env you can pass the cfg imported from the package.json dependecy
+  initConfigFile({}, (cfg) => {
     console.log(`cfg ? ${JSON.stringify(cfg)}`)
   }, (username, pwd) => {
         console.log(`username ? ${username} pwd ? ${pwd}`)
@@ -32,7 +35,6 @@ function loadWithTest() {
 
 function load() {
   getConfigFile().then((cfg) => {
-    console.log(`The cfg is ${JSON.stringify(cfg)}`)
     initLanguage()
     initConfigFile(cfg, saveConfigFile, createNewUser, refreshTimezone)
     root.render(
