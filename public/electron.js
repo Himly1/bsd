@@ -8,29 +8,11 @@ const fs = require('fs')
 const process = require('process')
 const os = require('os')
 const cmd = require('node-cmd')
-
+const pathResolve = require('path').resolve
 const platform = process.platform
 const currentUsername = os.userInfo().username
 const supported = ['win32'].includes(platform)
-let defaultConfig = {
-  "parentPwd": null,
-  "qa": {
-    "configQuestion1": "知行合一",
-    "configQuestion2": "《Tower of song》by Leonard Cohen",
-    "configQuestion3": "我的人生比电影精彩多了"
-  },
-  "timeRangesNotAllowToUseTheComputer": [],
-  "language": "cn",
-  "onlyWorkForTheUsers": [],
-  "usernames": [
-    "Humble",
-    "OnTheRoad",
-    "OnMyWay"
-  ],
-  "choosedTimeZone": "Hello world, goodbye world, hello world",
-  "supported": false
-}
-
+let defaultConfig = {}
 const forExplore = "forExplore"
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
@@ -39,7 +21,7 @@ const forExplore = "forExplore"
 //which python program should be set as self starts
 const waysOfGetThePathOfThePythonProgram = {
   win32: () => {
-    return './pythonScripts/win32.pyw'
+    return pathResolve('resources/pythonScripts/win32.pyw')
   }
 }
 
@@ -48,7 +30,7 @@ const waysOfGetThePathOfThePythonProgram = {
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
-    fs.copyFileSync('./config.json', pathOfSelfStarts)
+    fs.copyFileSync(pathResolve('resources/config.json'), pathOfSelfStarts)
   }
 }
 
@@ -129,10 +111,10 @@ function setThePythonFileAsSelfStarts() {
 function loadTheConfigFromFile() {
 
 
-  if (fs.existsSync('./config.json')) {
-    defaultConfig = JSON.parse(fs.readFileSync('./config.json'), 'utf8')
+  if (fs.existsSync(pathResolve('resources/config.json'))) {
+    defaultConfig = JSON.parse(fs.readFileSync(pathResolve('resources/config.json')), 'utf8')
   } else {
-    fs.writeFileSync('./config.json', JSON.stringify(defaultConfig), 'utf8')
+    fs.writeFileSync(pathResolve('resources/config.json'), JSON.stringify(defaultConfig), 'utf8')
   }
 
 
@@ -155,7 +137,7 @@ function loadTheConfigFromFile() {
 }
 
 function saveTheConfigToTheFile() {
-  fs.writeFileSync('./config.json', JSON.stringify(defaultConfig), {
+  fs.writeFileSync(pathResolve('resources/config.json'), JSON.stringify(defaultConfig), {
     encoding: 'utf8'
   })
   const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
@@ -190,7 +172,7 @@ function setUpExpressServer() {
       res.status(200).send()
     } catch (err) {
       console.error(`err occrred while creating new user. err: ${err}`)
-      res.status(500).send()
+      res.status(500).send(err)
     }
   }
 
@@ -228,14 +210,12 @@ function loadElectronWindow() {
       height: 800,
       title: "BSD",
       autoHideMenuBar: true,
-      icon: __dirname + "/logo.ico",
+      icon: pathResolve("resources/public/icon.ico"),
       webPreferences: {
         nodeIntegration: true,
       },
     });
 
-    // and load the index.html of the app.
-    // win.loadFile("index.html");
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
     win.webContents.openDevTools({ mode: 'detach' });
   }
@@ -259,6 +239,8 @@ function loadElectronWindow() {
       createWindow();
     }
   });
+
+  
 }
 
 setThePythonFileAsSelfStarts()

@@ -10,7 +10,7 @@ import App from './App';
 import { getConfigFile, saveConfigFile, createNewUser, refreshTimezone } from './appDependency'
 
 //this line of code not working in the windwos env dont know why
-//this from the package.json dependecies and pointed to the 'public/config.json'
+//this from the package.json dependecies and pointed to the './config.json'
 // import cfg from 'config-json'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))

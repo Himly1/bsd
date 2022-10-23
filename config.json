@@ -1,0 +1,18 @@
+{
+    "parentPwd": null,
+    "qa": {
+        "configQuestion1": "知行合一",
+        "configQuestion2": "《Tower of song》by Leonard Cohen",
+        "configQuestion3": "我的人生比电影精彩多了"
+    },
+    "timeRangesNotAllowToUseTheComputer": [],
+    "language": "cn",
+    "onlyWorkForTheUsers": [],
+    "usernames": [
+        "Humble",
+        "OnTheRoad",
+        "OnMyWay"
+    ],
+    "choosedTimeZone": "Hello world, goodbye world, hello world",
+    "supported": false
+}

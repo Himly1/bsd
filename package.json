@@ -21,11 +21,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && cp -r pythonScripts ./build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "build-production": "react-scripts build && cp -r pythonScripts ./build",
     "elec": "npm run build && electron .",
-    "build-linux": "npm build && electron-builder --win --ia32"
+    "build-win": "npm run build && electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -49,13 +50,19 @@
     "electron-builder": "^23.6.0",
     "electron": "^21.2.0",
     "sass": "^1.55.0",
-    "config-json": "file:./public/config.json"
+    "config-json": "file:config.json"
   },
   "author": "zhengMa",
   "repository": "https://github.com/Himly1/bsd",
   "build": {
     "appId": "zhengMa.org",
     "productName": "BSD",
+    "icon": "./logo.ico",
+    "extraResources": [
+      "./pythonScripts",
+      "./config.json",
+      "./public/icon.ico"
+    ],
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -63,29 +70,27 @@
     "buildVersion": "1.0",
     "copyright": "Copyright © 2022 zhengMa",
     "win": {
-      "icon": "./logo.ico",
+      "icon": "build/icon.ico",
       "target": "nsis"
     },
-    "dmg": {
-
-    },
+    "dmg": {},
     "mac": {
-      "icon": "./logo.ico"
+
     },
     "nsis": {
       "deleteAppDataOnUninstall": true,
-      "oneClick": true,
+      "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/logo.ico",
-      "uninstallerIcon": "build/logo.ico",
-      "installerHeaderIcon": "build/logo.ico",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "BSD"
     },
     "linux": {
-      "icon": "./logo.ico"
+      "icon": "build/icon.ico"
     }
   }
 }
