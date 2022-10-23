@@ -2,16 +2,6 @@ import React, { useEffect, useReducer, useState } from "react";
 import { translate } from '../international/language'
 import { mainPage as mainPageKeyRef } from '../international/keyRefs'
 
-function ParentalSettingClickableButton({ whenItClicked }) {
-    return <div className="level">
-        <div className="level-item" />
-        <div className="level-right">
-            <div className="level-item">
-                <button onClick={whenItClicked} class="button is-link is-light">{translate(mainPageKeyRef.labelOfParentalSettingButton)}</button>
-            </div>
-        </div>
-    </div>
-}
 
 function TimeRangeAdd({ whenAdd }) {
     return <button class="button" onClick={whenAdd}>
@@ -174,9 +164,8 @@ function TimeRangesController({ defaultTimeRanges, whenItDone }) {
     </div>
 }
 
-function MainPage({ defaultTimeRanges, whenTimeRangesReset, whenParentalSettingClicked }) {
+function MainPage({ defaultTimeRanges, whenTimeRangesReset}) {
     return <div style={{ 'height': '100%' }}>
-        <ParentalSettingClickableButton whenItClicked={whenParentalSettingClicked} />
         <TimeRangesController defaultTimeRanges={defaultTimeRanges.length == 0 ? [["", ""]] : defaultTimeRanges} whenItDone={whenTimeRangesReset} />
     </div>
 }

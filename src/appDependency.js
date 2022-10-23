@@ -46,7 +46,6 @@ export function createNewUser(username, pwd) {
 
 async function fetchTheConfig() {
     return await axios.get('http://localhost:8888/config').then((response) => {
-        console.log(`The response is ${JSON.stringify(response.data)}`)
         if (response.status !== 200) {
             throw response.data
         } else {

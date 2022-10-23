@@ -6,7 +6,7 @@
       "configQuestion3": "123"
     },
     "timeRangesNotAllowToUseTheComputer": [],
-    "language": "en",
+    "language": "cn",
     "onlyWorkForTheUsers": ["test"
     ],
     "usernames": ["onTheRoad", "test"

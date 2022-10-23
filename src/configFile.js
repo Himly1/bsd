@@ -13,11 +13,16 @@ const config = {
     language: 'cn',
     onlyWorkForTheUsers: [],
     usernames: [],
-    choosedTimeZone: ""
+    choosedTimeZone: "",
+    supported: false
 }
 
 export function isPwdSetUp() {
     return config.parentPwd !== null && config.parentPwd !== undefined
+}
+
+export function isCurrentOsSupported() {
+    return config.supported
 }
 
 export function retriveParentPwd() {

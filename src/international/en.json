@@ -31,5 +31,8 @@
     "labelOfRefreshTimezoneButton": "Refresh",
     "labelOfShowTimezone": "Timezone: ",
     "labelOfShowCurrentTime": "The time should be: ",
-    "labelOfTheErrorOnRefresh": "Error occurred while refreshing the timezone please submit an issue on the GitHub page"
+    "labelOfTheErrorOnRefresh": "Error occurred while refreshing the timezone please submit an issue on the GitHub page",
+    "notSupportedHeader": "YOUR OS NOT SUPPORTED FOR NOW",
+    "notSupportedContent": "You can click the button below to explore this app anyway or request a pull-request on the GitHub repository",
+    "labelOfExporeButtonOfNotSupported": "Explore Anyway"
 }

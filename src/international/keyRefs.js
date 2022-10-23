@@ -36,3 +36,9 @@ export const mainPage = {
     labelOfParentalSettingButton: "labelOfParentalSetting",
     buttonLabelForSaveTimeRanges: "saveTimeRangeButtonLabel"
 }
+
+export const notSupported = {
+    labelOfHeader: "notSupportedHeader",
+    labelOfContent: "notSupportedContent",
+    labelOfExploreButton: "labelOfExporeButtonOfNotSupported"
+}

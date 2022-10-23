@@ -1,11 +1,14 @@
 
 import { useReducer } from "react"
+import LngOptions from "./components/languageOptions"
 import Login from "./components/login"
 import Logo from "./components/logo"
 import MainPage from "./components/mainPage"
+import NotSupported from "./components/notSupported"
 import ParentalSettings from "./components/parentalSetting"
+import ParentalSettingClickableButton from "./components/parentalSettingClickablebutton"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone, retrieveTheCallbackForRefreshTimeZone} from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone, retrieveTheCallbackForRefreshTimeZone, isCurrentOsSupported } from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -14,10 +17,20 @@ function App() {
     const [state, setState] = useReducer((p, n) => ({ ...p, ...n }), {
         randomValuePresentChange: false,
         pwdSetUp: isPwdSetUp(),
-        loginSuccess: false
+        loginSuccess: false,
+        exporeThisApp: false
     })
 
     const onConditionDisplay = [
+        [() => {
+            return !isCurrentOsSupported() && !state.exporeThisApp
+        }, () => {
+            return <NotSupported whenUserWantToExporeThisApp={() => {
+                setState({
+                    exporeThisApp: true
+                })
+            }} />
+        }],
         [() => {
             return !state.pwdSetUp
         }, () => {
@@ -30,11 +43,7 @@ function App() {
                     randomValuePresentChange: !state.randomValuePresentChange,
                     pwdSetUp: true
                 })
-            }} defaultQa={retriveSecretQa()} defaultPwd={retriveParentPwd()} onLanguageChange={(lng) => {
-                changeWithName(lng)
-                state.randomValuePresentChange = !state.randomValuePresentChange
-                setState(state)
-            }} lngOptions={getLanguageOptions()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
+            }} defaultQa={retriveSecretQa()} defaultPwd={retriveParentPwd()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
                 createNewUser={retreiveFuncForCreateNewUser()}
                 refreshTimeZoneAsync={retrieveTheCallbackForRefreshTimeZone()}
                 userChoosedTimeZone={retrieveUserChoosedTimeZone()}
@@ -55,9 +64,6 @@ function App() {
         }, () => {
             return <MainPage defaultTimeRanges={retreiveTimeRanges()} whenTimeRangesReset={(timeRanges) => {
                 resetTimeRanges(timeRanges)
-            }} whenParentalSettingClicked={() => {
-                state.pwdSetUp = false
-                setState(state)
             }} />
         }]
     ]
@@ -68,6 +74,27 @@ function App() {
 
     return <div style={{ 'height': '80%' }}>
         <div>
+            <div className="level">
+                <div className="level-item"></div>
+                <div className="level-right">
+                    {(state.pwdSetUp && state.loginSuccess) && <div className="level-item">
+                        <ParentalSettingClickableButton onClicked={() => {
+                            setState({
+                                pwdSetUp: false
+                            })
+                        }} />
+                    </div>
+                    }
+
+                    <div className="level-item">
+                        <LngOptions whenLngChange={(lng) => {
+                            changeWithName(lng)
+                            state.randomValuePresentChange = !state.randomValuePresentChange
+                            setState(state)
+                        }} lngOptions={getLanguageOptions()}></LngOptions>
+                    </div>
+                </div>
+            </div>
             <div className="logo mt-3">
                 <Logo />
             </div>

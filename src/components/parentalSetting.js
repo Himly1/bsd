@@ -1,45 +1,6 @@
 import React, { useReducer, useState, useEffect } from "react";
-import { translate, getNameOfCurrentLng } from '../international/language'
+import { translate } from '../international/language'
 import { parentalSettings } from '../international/keyRefs'
-
-function LngOptions({ whenLngChange, lngOptions }) {
-
-    function renderOptions() {
-        return lngOptions.reduce((rs, option) => {
-            rs.push(<option key={option}>
-                {option}
-            </option>)
-            return rs
-        }, [])
-    }
-
-    function languageChanged(e) {
-        const options = e.target.options
-        const language = options[options.selectedIndex].label
-        whenLngChange(language)
-    }
-
-    return <div style={{ 'width': '100%' }} >
-        <nav class="level">
-            <div className="level-item"></div>
-
-            <div class="level-right">
-                <div className="level-item">
-                    <div class="control has-icons-left">
-                        <div class="select is-success">
-                            <select defaultValue={getNameOfCurrentLng()} onChange={languageChanged} >
-                                {renderOptions()}
-                            </select>
-                        </div>
-                        <span class="icon is-left">
-                            <i class="fa-solid fa-language"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </ div>
-}
 
 function PwdInput({ pwdUpdate, defaultPwd }) {
 
@@ -415,8 +376,6 @@ function ParentalSettings({
     whenSettingsDone,
     defaultQa,
     defaultPwd,
-    onLanguageChange,
-    lngOptions,
     userNames,
     selectedUsernames,
     createNewUser,
@@ -451,7 +410,6 @@ function ParentalSettings({
     }
 
     return <div style={{ 'height': '100%' }}>
-        <LngOptions whenLngChange={onLanguageChange} lngOptions={lngOptions} />
         {
             pwd.timeZoneSetUp ?
                 (pwd.userNameDone ? (pwd.isDone ?

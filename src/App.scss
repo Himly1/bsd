@@ -43,3 +43,9 @@ html,
     left: 0;
     transform: translate(calc(50vw - 50%));
 }
+
+.lngOption {
+    position: fixed;
+    left: 100px;
+    top: 150px;
+}

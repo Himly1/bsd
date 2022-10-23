@@ -31,5 +31,8 @@
     "labelOfRefreshTimezoneButton": "刷新",
     "labelOfShowTimezone": "时区: ",
     "labelOfShowCurrentTime": "时间: ",
-    "labelOfTheErrorOnRefresh": "刷新时区时发生了错误,请在GITHUB页面提交问题"
+    "labelOfTheErrorOnRefresh": "刷新时区时发生了错误,请在GITHUB页面提交问题",
+    "notSupportedHeader": "暂时不支持你的操作系统",
+    "notSupportedContent": "你可以点击下面的按钮来探索这个应用程序，或者在GitHub库申请拉动请求",
+    "labelOfExporeButtonOfNotSupported": "探索应用程序"
 }

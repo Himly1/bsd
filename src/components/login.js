@@ -87,7 +87,7 @@ function ResetPwdByQa({ qa, whenItDone }) {
     return state.answerAllCorrect ? <ResetPage whenItDone={whenItDone} /> : <div className="center resetPwd">
         <div class="box">
             <div className="is-vcentered is-centered is-multiline">
-                <div className>
+                <div>
                     <label className="label column is-vcentered has-text-centered text-font text-color" style={{ 'width': '100%' }}>{translate(login.resetPwdLabel)}</label>
                 </div>
 
