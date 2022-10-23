@@ -44,7 +44,7 @@ function App() {
                     pwdSetUp: true
                 })
             }} defaultQa={retriveSecretQa()} defaultPwd={retriveParentPwd()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
-                createNewUser={retreiveFuncForCreateNewUser()}
+                createNewUserAsync={retreiveFuncForCreateNewUser()}
                 refreshTimeZoneAsync={retrieveTheCallbackForRefreshTimeZone()}
                 userChoosedTimeZone={retrieveUserChoosedTimeZone()}
             />

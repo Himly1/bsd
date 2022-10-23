@@ -2,8 +2,8 @@ import {translate} from './../international/language'
 import {notSupported} from './../international/keyRefs'
 
 function NotSupported({ whenUserWantToExporeThisApp }) {
-    return <div className="center" style={{ 'height': '80%', 'marginTop': '3%' }}>
-        <div style={{ 'width': '20%' }}>
+    return <div className="center" style={{ 'height': '90%', 'marginTop': '3%' }}>
+        <div style={{ 'width': '40%' }}>
             <article class="message">
                 <div class="message-header">
                     <label style={{ 'width': '100%' }} className="has-text-centered">{translate(notSupported.labelOfHeader)}</label>

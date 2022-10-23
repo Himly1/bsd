@@ -51,10 +51,12 @@ export function retreiveSelectedUsernames() {
 
 let callbackForCreateUser = null
 export function retreiveFuncForCreateNewUser() {
-    return (name, pwd) => {
+    return async (name, pwd) => {
         config.usernames.push(name)
         if (typeof callbackForCreateUser === 'function') {
-            callbackForCreateUser(name, pwd)
+            await callbackForCreateUser(name, pwd).catch((err => {
+                throw err
+            }))
             flush()
         } else {
             console.error(`No callback of create user exists`)

@@ -10,6 +10,7 @@ const os = require('os')
 
 const platform = process.platformst
 const currentUsername = os.userInfo().username
+const supported = ['win32'].includes(platform)
 let config = {}
 
 const forExplore = "forExplore"
@@ -29,7 +30,7 @@ const waysOfGetThePathOfThePythonProgram = {
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
-    fs.copyFileSync('./../config.json', pathOfSelfStarts)
+    fs.copyFileSync('public/config.json', pathOfSelfStarts)
   }
 }
 
@@ -45,7 +46,7 @@ const waysOfSetPythonProgramAsSelfStarts = {
 
 const waysOfGetDefaultTimeZone = {
   win32: () => {
-    
+
   },
   forExplore: () => {
     return "Hello world, goodbye world, hello world"
@@ -78,20 +79,24 @@ const waysOfGetTheRealUsernamesOfCurrentOs = {
 
 
 function setThePythonFileAsSelfStarts() {
-  const func = pythonProgramSelfStartsSetter[platform]
-  if (!func) {
+  const func = waysOfSetPythonProgramAsSelfStarts[platform]
+  if (func) {
+    func()
+  } else {
     console.error(`Current os not supported`)
   }
 
-  func()
 }
 
 function loadTheConfigFromFile() {
-  config = JSON.parse(fs.readFileSync('./../config.json', 'utf8'))
-  [
-    ['choosedTimeZone', waysOfGetDefaultTimeZone]
+  config = JSON.parse(fs.readFileSync('public/config.json', 'utf8'))
+  console.log(`config ? ${Object.keys(config)}`)
+  const metas = [
+    ['choosedTimeZone', waysOfGetDefaultTimeZone],
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
-  ].foreach((meta) => {
+  ]
+  metas.forEach((meta) => {
+    console.log(`meta ? ${meta}`)
     const configName = meta[0]
     const valueOfExporeFunc = meta[1][forExplore]
     const valueFunc = meta[1][platform]
@@ -106,7 +111,7 @@ function loadTheConfigFromFile() {
 }
 
 function saveTheConfigToTheFile() {
-  fs.writeFileSync('./../config.js', JSON.stringify(config), {
+  fs.writeFileSync('public/config.json', JSON.stringify(config), {
     encoding: 'utf8'
   })
   const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
@@ -124,10 +129,12 @@ function createNewUser(username, pwd) {
 
 function setUpExpressServer() {
   function configFile(req, res) {
+    console.log(`requesting config `)
     res.status(200).send(config)
   }
 
   function saveConfigFile(req, res) {
+    console.log(`saving config and the config is ${req.body}`)
     config = req.body
     saveTheConfigToTheFile()
     res.status(200).send()
@@ -136,14 +143,16 @@ function setUpExpressServer() {
   function newUser(req, res) {
     const username = req.body.username
     const password = req.body.pwd
+    console.log(`new user ? ${username} ${password}`)
     createNewUser(username, password)
     res.status(200).send()
   }
 
   function refreshTimeZoneAndReturn(req, res) {
-    const forExplore = waysOfGetDefaultTimeZone[forExplore]
+    console.log(`refresh time zone`)
+    const forExploreFuc = waysOfGetDefaultTimeZone[forExplore]
     const timezoneFuc = waysOfGetDefaultTimeZone[platform]
-    const timezone = [forExplore, timezoneFuc].reduce((rs, fuc) => {
+    const timezone = [forExploreFuc, timezoneFuc].reduce((rs, fuc) => {
       if (fuc) {
         rs = fuc()
       }
@@ -202,4 +211,4 @@ function loadElectronWindow() {
 setThePythonFileAsSelfStarts()
 loadTheConfigFromFile()
 setUpExpressServer()
-// loadElectronWindow()
+loadElectronWindow()

@@ -130,7 +130,7 @@ function QaInput({ defaultQa, whenItDone }) {
     </div>
 }
 
-function AddNewUser({ createNewUser, whenUserCreated, whenCancelled }) {
+function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
     const [nameAndPwd, setNameAndPwd] = useReducer((p, n) => ({ ...p, ...n }), {
         name: "",
         pwd: "",
@@ -153,8 +153,16 @@ function AddNewUser({ createNewUser, whenUserCreated, whenCancelled }) {
 
     function create() {
         try {
-            createNewUser(nameAndPwd.name, nameAndPwd.pwd)
-            whenUserCreated(nameAndPwd.name)
+            createNewUserAsync(nameAndPwd.name, nameAndPwd.pwd).then(() => {
+                setNameAndPwd({
+                    err: null
+                })
+                whenUserCreated(nameAndPwd.name)
+            }).catch((err => {
+                setNameAndPwd({
+                    err: err
+                })
+            }))
         } catch (e) {
             console.error(`err occurred while creating the user. err ? ${e}`)
             setNameAndPwd({
@@ -193,7 +201,7 @@ function AddNewUser({ createNewUser, whenUserCreated, whenCancelled }) {
     </div >
 }
 
-function ChooseUsernames({ usernames, selected, whenItDone, createNewUser }) {
+function ChooseUsernames({ usernames, selected, whenItDone, createNewUserAsync }) {
     const Objstate = usernames.reduce((rs, username) => {
         const isSelected = selected.includes(username)
         rs[username] = isSelected
@@ -254,7 +262,7 @@ function ChooseUsernames({ usernames, selected, whenItDone, createNewUser }) {
     }
 
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
-        {actionOfCreateNewUser ? <AddNewUser createNewUser={createNewUser} whenUserCreated={(username) => {
+        {actionOfCreateNewUser ? <AddNewUser createNewUserAsync={createNewUserAsync} whenUserCreated={(username) => {
             state[username] = false
             setActionOfCreateNewUser(false)
             setState(state)
@@ -304,7 +312,7 @@ function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
 
     useEffect(() => {
         const err = translate(parentalSettings.labelOfTheErrorOnRefresh)
-        if(timeZoneState && err !== timeZoneState.errOnRefresh) {
+        if (timeZoneState.errOnRefresh && err !== timeZoneState.errOnRefresh) {
             setTimeZoneState({
                 errOnRefresh: err
             })
@@ -322,7 +330,7 @@ function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
     })
 
     function refreshTimezone() {
-        const timezone = refreshAysncFunc().then((timezone) => {
+        refreshAysncFunc().then((timezone) => {
             setTimeZoneState({
                 userChoosed: timezone,
                 errOnRefresh: null
@@ -339,12 +347,13 @@ function ConfirmTimeZone({ defaultTimeZone, refreshAysncFunc, whenItDone }) {
         whenItDone(timeZoneState.userChoosed)
     }
 
+    console.log(`err ? ${timeZoneState.errOnRefresh !== null}`)
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
         <div className="box">
             <div class="field has-text-centered">
                 <label class="label">{translate(parentalSettings.labelOfConfirmTimezone)}</label>
                 <label className="heading">{translate(parentalSettings.subtitleOfConfirmTimezone)}</label>
-                {timeZoneState.errOnRefresh && <label className="heading has-text-danger">{timeZoneState.errOnRefresh}</label>}
+                {(timeZoneState.errOnRefresh !== null) && <label className="heading has-text-danger">{timeZoneState.errOnRefresh}</label>}
             </div>
 
             <div className="field">
@@ -378,7 +387,7 @@ function ParentalSettings({
     defaultPwd,
     userNames,
     selectedUsernames,
-    createNewUser,
+    createNewUserAsync,
     refreshTimeZoneAsync,
     userChoosedTimeZone }) {
 
@@ -415,7 +424,7 @@ function ParentalSettings({
                 (pwd.userNameDone ? (pwd.isDone ?
                     <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
                     <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
-                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUser={createNewUser} />) : <ConfirmTimeZone defaultTimeZone={userChoosedTimeZone} refreshAysncFunc={refreshTimeZoneAsync} whenItDone={timeZoneDone} />
+                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUserAsync={createNewUserAsync} />) : <ConfirmTimeZone defaultTimeZone={userChoosedTimeZone} refreshAysncFunc={refreshTimeZoneAsync} whenItDone={timeZoneDone} />
         }
     </div>
 }

@@ -18,13 +18,13 @@ html,
     background-color: rgb(226, 49, 232)
 }
 
-.text-color {
-    color: #0074D9;
-}
+// .text-color {
+//     color: #0074D9;
+// }
 
-.text-font {
-    font-family: 'Noto';
-}
+// .text-font {
+//     font-family: 'Noto';
+// }
 
 @font-face {
     font-family: 'Noto';
@@ -42,10 +42,4 @@ html,
     top: 0;
     left: 0;
     transform: translate(calc(50vw - 50%));
-}
-
-.lngOption {
-    position: fixed;
-    left: 100px;
-    top: 150px;
 }

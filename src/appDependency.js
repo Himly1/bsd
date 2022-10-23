@@ -37,6 +37,8 @@ export function createNewUser(username, pwd) {
             if (response.status !== 200) {
                 throw response.data
             }
+        }).catch(err => {
+            throw err
         })
     } catch (e) {
         console.error(`Error occrred while creating new user. ${e}`)
