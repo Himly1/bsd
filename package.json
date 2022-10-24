@@ -2,7 +2,7 @@
   "name": "bsd",
   "version": "0.1.0",
   "private": true,
-  "main": "./public/main.js",
+  "main": "./public/electron.js",
   "homepage": "./",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.2.0",
@@ -26,7 +26,8 @@
     "eject": "react-scripts eject",
     "elec": "npm run build && electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build-win": "electron-builder --win --ia32"
   },
   "eslintConfig": {
     "extends": [
@@ -61,17 +62,32 @@
       "build/**/*",
       "node_modules/**/*"
     ],
-    "directories": {
-      "buildResources": "installer/resources"
-    },
     "buildVersion": "1.0",
     "copyright": "Copyright © 2022 zhengMa",
     "win": {
+      "icon": "./logo.ico",
       "target": "nsis"
+    },
+    "dmg": {
+
+    },
+    "mac": {
+      "icon": "./logo.ico"
     },
     "nsis": {
       "deleteAppDataOnUninstall": true,
-      "include": "installer/win/nsis-installer.nsh"
+      "oneClick": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/logo.ico",
+      "uninstallerIcon": "build/logo.ico",
+      "installerHeaderIcon": "build/logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "BSD"
+    },
+    "linux": {
+      "icon": "./logo.ico"
     }
   }
 }

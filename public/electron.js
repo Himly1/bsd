@@ -12,7 +12,24 @@ const cmd = require('node-cmd')
 const platform = process.platform
 const currentUsername = os.userInfo().username
 const supported = ['win32'].includes(platform)
-let config = {}
+let defaultConfig = {
+  "parentPwd": null,
+  "qa": {
+    "configQuestion1": "知行合一",
+    "configQuestion2": "《Tower of song》by Leonard Cohen",
+    "configQuestion3": "我的人生比电影精彩多了"
+  },
+  "timeRangesNotAllowToUseTheComputer": [],
+  "language": "cn",
+  "onlyWorkForTheUsers": [],
+  "usernames": [
+    "Humble",
+    "OnTheRoad",
+    "OnMyWay"
+  ],
+  "choosedTimeZone": "Hello world, goodbye world, hello world",
+  "supported": false
+}
 
 const forExplore = "forExplore"
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
@@ -31,7 +48,7 @@ const waysOfGetThePathOfThePythonProgram = {
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
-    fs.copyFileSync('../src/config.json', pathOfSelfStarts)
+    fs.copyFileSync('./config.json', pathOfSelfStarts)
   }
 }
 
@@ -99,10 +116,6 @@ const waysOfGetTheRealUsernamesOfCurrentOs = {
 }
 
 
-
-
-
-
 function setThePythonFileAsSelfStarts() {
   const func = waysOfSetPythonProgramAsSelfStarts[platform]
   if (func) {
@@ -114,7 +127,15 @@ function setThePythonFileAsSelfStarts() {
 }
 
 function loadTheConfigFromFile() {
-  config = JSON.parse(fs.readFileSync('../src/config.json', 'utf8'))
+
+
+  if (fs.existsSync('./config.json')) {
+    defaultConfig = JSON.parse(fs.readFileSync('./config.json'), 'utf8')
+  } else {
+    fs.writeFileSync('./config.json', JSON.stringify(defaultConfig), 'utf8')
+  }
+
+
   const metas = [
     ['choosedTimeZone', waysOfGetDefaultTimeZone],
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
@@ -124,17 +145,17 @@ function loadTheConfigFromFile() {
     const valueOfExporeFunc = meta[1][forExplore]
     const valueFunc = meta[1][platform]
     if (valueFunc) {
-      config[configName] = valueFunc()
+      defaultConfig[configName] = valueFunc()
     } else {
-      config[configName] = valueOfExporeFunc()
+      defaultConfig[configName] = valueOfExporeFunc()
     }
   })
 
-  config.supported = supported
+  defaultConfig.supported = supported
 }
 
 function saveTheConfigToTheFile() {
-  fs.writeFileSync('../src/config.json', JSON.stringify(config), {
+  fs.writeFileSync('./config.json', JSON.stringify(defaultConfig), {
     encoding: 'utf8'
   })
   const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
@@ -152,11 +173,11 @@ function createNewUser(username, pwd) {
 
 function setUpExpressServer() {
   function configFile(req, res) {
-    res.status(200).send(config)
+    res.status(200).send(defaultConfig)
   }
 
   function saveConfigFile(req, res) {
-    config = req.body
+    defaultConfig = req.body
     saveTheConfigToTheFile()
     res.status(200).send()
   }

@@ -35,9 +35,10 @@ function App() {
             return !state.pwdSetUp
         }, () => {
             return <ParentalSettings whenSettingsDone={(timezone, usernames, pwd, qa) => {
+                console.log(`The pwd is ${pwd}`)
+                updateParentPwd(pwd)
                 resetUserChoosedTimeZone(timezone)
                 resetOnlyWorkForTheUsers(usernames)
-                updateParentPwd(pwd)
                 updateSecretQa(qa)
                 setState({
                     randomValuePresentChange: !state.randomValuePresentChange,
