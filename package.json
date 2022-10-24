@@ -21,13 +21,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp -r pythonScripts ./build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "elec": "npm run build && electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "build-win": "electron-builder --win --ia32"
+    "build-linux": "npm build && electron-builder --win --ia32"
   },
   "eslintConfig": {
     "extends": [

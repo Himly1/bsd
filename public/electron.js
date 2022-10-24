@@ -39,7 +39,7 @@ const forExplore = "forExplore"
 //which python program should be set as self starts
 const waysOfGetThePathOfThePythonProgram = {
   win32: () => {
-    return '../src/pythonScripts/win32.pyw'
+    return './pythonScripts/win32.pyw'
   }
 }
 
