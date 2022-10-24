@@ -147,7 +147,7 @@ function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
     function nameChanged(e) {
         const newName = e.target.value
         setNameAndPwd({
-            name: newName
+            name: newName.trim()
         })
     }
 
