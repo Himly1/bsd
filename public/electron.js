@@ -1,5 +1,6 @@
 const path = require('path');
 const { app, BrowserWindow } = require('electron');
+const isDev = require('electron-is-dev')
 const express = require('express')
 const exApp = express()
 exApp.use(express.urlencoded())
@@ -14,6 +15,7 @@ const currentUsername = os.userInfo().username
 const supported = ['win32'].includes(platform)
 let defaultConfig = {}
 const forExplore = "forExplore"
+const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.json")
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -21,6 +23,10 @@ const forExplore = "forExplore"
 //which python program should be set as self starts
 const waysOfGetThePathOfThePythonProgram = {
   win32: () => {
+    if (isDev) {
+      return 'pythonScripts/win32.pyw'
+    }
+
     return pathResolve('resources/pythonScripts/win32.pyw')
   }
 }
@@ -30,7 +36,7 @@ const waysOfGetThePathOfThePythonProgram = {
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
     const pathOfSelfStarts = 'C:\\Users\\' + currentUsername + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
-    fs.copyFileSync(pathResolve('resources/config.json'), pathOfSelfStarts)
+    fs.copyFileSync(configFilePath, pathOfSelfStarts)
   }
 }
 
@@ -109,15 +115,14 @@ function setThePythonFileAsSelfStarts() {
 }
 
 function loadTheConfigFromFile() {
-
-
-  if (fs.existsSync(pathResolve('resources/config.json'))) {
-    defaultConfig = JSON.parse(fs.readFileSync(pathResolve('resources/config.json')), 'utf8')
+  if (fs.existsSync(configFilePath)) {
+    defaultConfig = JSON.parse(fs.readFileSync(configFilePath), 'utf8')
   } else {
-    fs.writeFileSync(pathResolve('resources/config.json'), JSON.stringify(defaultConfig), 'utf8')
+    fs.writeFileSync(configFilePath, JSON.stringify(defaultConfig), 'utf8')
   }
 
 
+  console.log(`defaultConfig ? ${JSON.stringify(defaultConfig)}`)
   const metas = [
     ['choosedTimeZone', waysOfGetDefaultTimeZone],
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
@@ -137,7 +142,7 @@ function loadTheConfigFromFile() {
 }
 
 function saveTheConfigToTheFile() {
-  fs.writeFileSync(pathResolve('resources/config.json'), JSON.stringify(defaultConfig), {
+  fs.writeFileSync(configFilePath, JSON.stringify(defaultConfig), {
     encoding: 'utf8'
   })
   const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
@@ -149,7 +154,7 @@ function saveTheConfigToTheFile() {
 function createNewUser(username, pwd) {
   const newUser = waysOfCreateNewUser[platform]
   if (newUser) {
-    newUser(username, pwd)
+    newUser({ username, pwd })
   }
 }
 
@@ -210,14 +215,16 @@ function loadElectronWindow() {
       height: 800,
       title: "BSD",
       autoHideMenuBar: true,
-      icon: pathResolve("resources/public/icon.ico"),
+      icon: isDev ? './icon.ico' : pathResolve("resources/public/icon.ico"),
       webPreferences: {
         nodeIntegration: true,
       },
     });
 
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-    win.webContents.openDevTools({ mode: 'detach' });
+    if (isDev) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
   }
 
   // This method will be called when Electron has finished
@@ -240,7 +247,7 @@ function loadElectronWindow() {
     }
   });
 
-  
+
 }
 
 setThePythonFileAsSelfStarts()

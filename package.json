@@ -17,16 +17,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "electron-is-dev": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-production": "react-scripts build && cp -r pythonScripts ./build",
-    "elec": "npm run build && electron .",
-    "build-win": "npm run build && electron-builder"
+    "dev-elec-on-win": "npm run build && xcopy.exe .\\pythonScripts\\ .\\build\\ && xcopy.exe .\\config.json .\\build\\ && electron .",
+    "dev-elec-on-linux": "npm run build && cp -r ./pythonScripts/ ./build/ && cp config.json ./build/  electron .",
+    "build-win": "npm run build && electron-builder --win --ia32"
   },
   "eslintConfig": {
     "extends": [
@@ -47,10 +48,10 @@
     ]
   },
   "devDependencies": {
-    "electron-builder": "^23.6.0",
+    "config-json": "file:config.json",
     "electron": "^21.2.0",
-    "sass": "^1.55.0",
-    "config-json": "file:config.json"
+    "electron-builder": "^23.6.0",
+    "sass": "^1.55.0"
   },
   "author": "zhengMa",
   "repository": "https://github.com/Himly1/bsd",
@@ -70,13 +71,12 @@
     "buildVersion": "1.0",
     "copyright": "Copyright © 2022 zhengMa",
     "win": {
+      "requestedExecutionLevel": "requireAdministrator",
       "icon": "build/icon.ico",
       "target": "nsis"
     },
     "dmg": {},
-    "mac": {
-
-    },
+    "mac": {},
     "nsis": {
       "deleteAppDataOnUninstall": true,
       "oneClick": false,

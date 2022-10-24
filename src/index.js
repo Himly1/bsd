@@ -19,10 +19,9 @@ function loadWithTest() {
   //replace the first argument with actual config
   //on linux env you can pass the cfg imported from the package.json dependecy
   initConfigFile({}, (cfg) => {
-    console.log(`cfg ? ${JSON.stringify(cfg)}`)
   }, (username, pwd) => {
-        console.log(`username ? ${username} pwd ? ${pwd}`)
-        throw 'fuck off'
+    console.log(`username ? ${username} pwd ? ${pwd}`)
+    throw 'fuck off'
   }, async () => {
     console.log(`will return new timezone`)
     throw 'fuck off'
@@ -35,6 +34,7 @@ function loadWithTest() {
 
 function load() {
   getConfigFile().then((cfg) => {
+    console.log(`The cfg is ${JSON.stringify(cfg)}`)
     initLanguage()
     initConfigFile(cfg, saveConfigFile, createNewUser, refreshTimezone)
     root.render(
