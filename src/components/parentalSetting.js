@@ -212,7 +212,7 @@ function ChooseUsernames({ refreshUsernamesAsync, selected, whenItDone, createNe
             const usernames = await refreshUsernamesAsync()
             const newState = usernames.reduce((rs, name) => {
                 const value = state[name]
-                rs[name] = value ? value : false
+                rs[name] = value ? value : selected.includes(name) ? true : false
                 return rs
             }, {})
 

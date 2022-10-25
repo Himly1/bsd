@@ -20,39 +20,15 @@ const cmd = require('node-cmd')
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
 
-//which python program should be set as self starts
-const waysOfGetThePathOfThePythonProgram = {
-  win32: () => {
-    if (isDev) {
-      return pathResolve('pythonScripts/win32.pyw')
-    }
 
-    return pathResolve('resources/pythonScripts/win32.pyw')
-  }
-}
-
-//The python program should read newest config every second 
-//therefore there should be a way to flush the new config to the config file of python program dependes on
-const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
+//How to setup everything to make this app work on the os
+const waysOfSetUP = {
   win32: () => {
-    const pathOfSelfStarts = '"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /K /D /H /Y'
-    const { data, err, stderr } = cmd.runSync(`xcopy.exe "${configFilePath}" ${pathOfSelfStarts}`)
-    if (err || stderr) {
-      throw err
-    }
-  }
-}
-
-//how to set the python program as self starts
-const waysOfSetPythonProgramAsSelfStarts = {
-  win32: () => {
-    const pathOfSelfStarts = '"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /K /D /H /Y'
-    const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
-    const command = `xcopy.exe "${pythonPath()}" ${pathOfSelfStarts}`
-    const { data, err, stderr } = cmd.runSync(command)
-    if (err || stderr) {
-      throw err
-    }
+    //for windwos it it simple, just create a task schedule that run on every minute for all user
+    const taskName = 'BSD-TASK'
+    const runWhichFile = pathResolve('resources/pythonScripts/win32.vbs')
+    cmd.runSync(`schtasks /Delete /TN ${taskName} -F`)
+    const { data, err, stderr } = cmd.runSync(`schtasks /create /RU Users /sc minute /mo 1 /tn ${taskName} /tr ${runWhichFile} /IT`)
   }
 }
 
@@ -111,16 +87,6 @@ const waysOfGetTheRealUsernamesOfCurrentOs = {
 }
 
 
-function setThePythonFileAsSelfStarts() {
-  const func = waysOfSetPythonProgramAsSelfStarts[platform]
-  if (func) {
-    func()
-  } else {
-    console.error(`Current os not supported`)
-  }
-
-}
-
 function loadTheConfigFromFile() {
   if (fs.existsSync(configFilePath)) {
     defaultConfig = JSON.parse(fs.readFileSync(configFilePath), 'utf8')
@@ -151,10 +117,6 @@ function saveTheConfigToTheFile() {
   fs.writeFileSync(configFilePath, JSON.stringify(defaultConfig), {
     encoding: 'utf8'
   })
-  const flushToPythonProgram = waysOfFlushConfigToTheSelfStartPythonProgramFolder[platform]
-  if (flushToPythonProgram) {
-    flushToPythonProgram()
-  }
 }
 
 function createNewUser(username, pwd) {
@@ -266,7 +228,16 @@ function loadElectronWindow() {
 
 
 }
-setThePythonFileAsSelfStarts()
+
+function setUp() {
+  const setup = waysOfSetUP[platform]
+  if (setup) {
+    setup()
+  }
+}
+
+
+setUp()
 loadTheConfigFromFile()
 setUpExpressServer()
 loadElectronWindow()

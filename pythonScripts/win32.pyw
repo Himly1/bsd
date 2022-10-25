@@ -3,7 +3,6 @@ import os
 import json
 import time
 
-from cv2 import inRange
 
 disableToPlayTheWindows = []
 limitTheUsers = []
@@ -12,7 +11,7 @@ defaultTimeZone = None
 
 def loadConfig():
     try:
-        with open('./config.json', encoding='utf8') as f:
+        with open('./../config.json', encoding='utf8') as f:
             config = json.load(f)
             global limitTheUsers, disableToPlayTheWindows, defaultTimeZone
             limitTheUsers = config['onlyWorkForTheUsers']
@@ -75,11 +74,11 @@ def canPlay():
     return userIsFine or timeIsFine
 
 
-while (True):
-    loadConfig()
-    syncTimeWithTheDefaultTimeZone()
-    itsfine = canPlay()
-    if (itsfine):
-        time.sleep(2)
-    else:
+loadConfig()
+syncTimeWithTheDefaultTimeZone()
+itsfine = canPlay()
+if (not itsfine):
+    counter = 10
+    while(counter > 0):
         os.system('shutdown -s -t 0')
+        counter = counter - 1

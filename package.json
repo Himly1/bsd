@@ -78,15 +78,15 @@
     "mac": {},
     "nsis": {
       "deleteAppDataOnUninstall": true,
-      "oneClick": false,
+      "oneClick": true,
       "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
       "installerHeaderIcon": "build/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "BSD"
+      "shortcutName": "BSD",
+      "include": "build/installer.nsh"
     },
     "linux": {
       "icon": "build/icon.ico"
