@@ -9,7 +9,7 @@ const fs = require('fs')
 const process = require('process')
 const os = require('os')
 const pathResolve = require('path').resolve
-const platform = process.platform
+const platform = isDev ? 'my os' : process.platform
 const currentUsername = os.userInfo().username
 const supported = ['win32'].includes(platform)
 let defaultConfig = {}
@@ -49,7 +49,6 @@ const waysOfSetPythonProgramAsSelfStarts = {
     const pathOfSelfStarts = '"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /K /D /H /Y'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
     const command = `xcopy.exe "${pythonPath()}" ${pathOfSelfStarts}`
-    console.log(`The command is ${command}`)
     const { data, err, stderr } = cmd.runSync(command)
     if (err || stderr) {
       throw err
@@ -77,7 +76,6 @@ const waysOfCreateNewUser = {
   win32: ({ username, pwd }) => {
     const command = `net user ${username} ${pwd} /ADD`
     const { data, err, stderr } = cmd.runSync(command)
-    console.log(`data ? ${data}`)
     if (data === null || data === 'null') {
       throw err.toString() + stderr.toString()
     }
@@ -131,7 +129,6 @@ function loadTheConfigFromFile() {
   }
 
 
-  console.log(`defaultConfig ? ${JSON.stringify(defaultConfig)}`)
   const metas = [
     ['choosedTimeZone', waysOfGetDefaultTimeZone],
     ['usernames', waysOfGetTheRealUsernamesOfCurrentOs]
@@ -208,10 +205,21 @@ function setUpExpressServer() {
     }
   }
 
+  function retreiveUsernames(req, res) {
+    const fetcher = waysOfGetTheRealUsernamesOfCurrentOs[platform]
+    if (fetcher) {
+      res.status(200).send(fetcher())
+    }
+
+    const forExploreFuc = waysOfGetTheRealUsernamesOfCurrentOs[forExplore]
+    res.status(200).send(forExploreFuc())
+  }
+
   exApp.get('/config', configFile)
   exApp.put('/config', saveConfigFile)
   exApp.post('/users', newUser)
   exApp.get('/timezone', refreshTimeZoneAndReturn)
+  exApp.get('/users', retreiveUsernames)
 
   exApp.listen(8888)
 }
@@ -231,10 +239,9 @@ function loadElectronWindow() {
     });
 
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-    win.webContents.openDevTools({ mode: 'right' });
-    // if (isDev) {
-    // 
-    // }
+    if (isDev) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
   }
 
   // This method will be called when Electron has finished

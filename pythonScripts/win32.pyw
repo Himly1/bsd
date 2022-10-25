@@ -12,7 +12,7 @@ defaultTimeZone = None
 
 def loadConfig():
     try:
-        with open('./bsdConfig.json', encoding='utf8') as f:
+        with open('./config.json', encoding='utf8') as f:
             config = json.load(f)
             global limitTheUsers, disableToPlayTheWindows, defaultTimeZone
             limitTheUsers = config['onlyWorkForTheUsers']

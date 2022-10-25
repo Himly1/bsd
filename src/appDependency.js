@@ -37,13 +37,26 @@ export function createNewUser(username, pwd) {
             if (response.status !== 200) {
                 throw response.data
             }
-        }).catch(err => {
+        }).catch((err) => {
             throw err
         })
     } catch (e) {
         console.error(`Error occrred while creating new user. ${e}`)
         throw e
     }
+}
+
+export async function retreiveUsernames() {
+    return axios.get('http://localhost:8888/users').then((res) => {
+        if (res.status !== 200) {
+            throw res.data
+        } else {
+            return res.data
+        }
+    }).catch((err) => {
+        console.error(`err occurred while fetching the usernames. err? ${err}`)
+        throw err
+    })
 }
 
 async function fetchTheConfig() {
@@ -53,6 +66,9 @@ async function fetchTheConfig() {
         } else {
             return response.data
         }
+    }).catch((err) => {
+        console.error(`err occrred while fetching the config. err ? ${err}`)
+        throw err
     })
 }
 

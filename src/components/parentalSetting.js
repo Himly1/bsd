@@ -130,10 +130,11 @@ function QaInput({ defaultQa, whenItDone }) {
     </div>
 }
 
-function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
+function AddNewUser({ refreshUsernamesAsync, isTheUsernameOk, createNewUserAsync, whenUserCreated, whenCancelled }) {
     const [nameAndPwd, setNameAndPwd] = useReducer((p, n) => ({ ...p, ...n }), {
         name: "",
         pwd: "",
+        nameOk: false,
         err: null
     })
 
@@ -146,22 +147,30 @@ function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
 
     function nameChanged(e) {
         const newName = e.target.value
+        const nameOk = newName.length > 1 && isTheUsernameOk(newName)
+
         setNameAndPwd({
-            name: newName.trim()
+            name: newName.trim(),
+            nameOk: nameOk
         })
     }
 
-    function create() {
-        createNewUserAsync(nameAndPwd.name, nameAndPwd.pwd).then(() => {
+    async function create() {
+        await createNewUserAsync(nameAndPwd.name, nameAndPwd.pwd).then(async () => {
             setNameAndPwd({
                 err: null
             })
             whenUserCreated(nameAndPwd.name)
-        }).catch((err => {
-            setNameAndPwd({
-                err: err
-            })
-        }))
+        }).catch(async (err) => {
+            const usernames = await refreshUsernamesAsync()
+            if (usernames.includes(nameAndPwd.name)) {
+                whenUserCreated(nameAndPwd.name)
+            } else {
+                setNameAndPwd({
+                    err: err
+                })
+            }
+        })
     }
 
     function cancel() {
@@ -175,7 +184,7 @@ function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
         <div class="field">
             <label class="label">{translate(parentalSettings.labelOfNewUserUsername)}</label>
             <div class="control">
-                <input onChange={nameChanged} value={nameAndPwd.name} class={nameAndPwd.name.length > 1 ? 'input is-success' : 'input is-danger'} type="text" />
+                <input onChange={nameChanged} value={nameAndPwd.name} class={nameAndPwd.nameOk ? 'input is-success' : 'input is-danger'} type="text" />
             </div>
         </div>
 
@@ -188,20 +197,30 @@ function AddNewUser({ createNewUserAsync, whenUserCreated, whenCancelled }) {
 
         <div className="center">
             <button onClick={cancel} className="button is-primary">{translate(parentalSettings.labelOfNewUserCancelButton)}</button>
-            {(nameAndPwd.name.length > 1 && nameAndPwd.pwd.length >= 8) &&
+            {(nameAndPwd.nameOk && nameAndPwd.pwd.length >= 8) &&
                 < button onClick={create} class="button is-primary ml-3">{translate(parentalSettings.labelOfNewUserConfirmButton)}</button>}
         </div>
     </div >
 }
 
-function ChooseUsernames({ usernames, selected, whenItDone, createNewUserAsync }) {
-    const Objstate = usernames.reduce((rs, username) => {
-        const isSelected = selected.includes(username)
-        rs[username] = isSelected
-        return rs
-    }, {})
-    const [state, setState] = useReducer((p, n) => ({ ...p, ...n }), Objstate)
+function ChooseUsernames({ refreshUsernamesAsync, selected, whenItDone, createNewUserAsync }) {
+    const [state, setState] = useReducer((p, n) => ({ ...p, ...n }), {})
     const [actionOfCreateNewUser, setActionOfCreateNewUser] = useState(false)
+
+    useState(() => {
+        async function refreshUsernames() {
+            const usernames = await refreshUsernamesAsync()
+            const newState = usernames.reduce((rs, name) => {
+                const value = state[name]
+                rs[name] = value ? value : false
+                return rs
+            }, {})
+
+            setState(newState)
+        }
+
+        refreshUsernames()
+    })
 
     function updateTheUsernameState(username) {
         state[username] = !state[username]
@@ -255,7 +274,10 @@ function ChooseUsernames({ usernames, selected, whenItDone, createNewUserAsync }
     }
 
     return <div className="center" style={{ 'height': '80%', 'marginTop': '8%' }}>
-        {actionOfCreateNewUser ? <AddNewUser createNewUserAsync={createNewUserAsync} whenUserCreated={(username) => {
+        {actionOfCreateNewUser ? <AddNewUser isTheUsernameOk={(name) => {
+            const exists = state[name]
+            return exists === undefined
+        }} refreshUsernamesAsync={refreshUsernamesAsync} createNewUserAsync={createNewUserAsync} whenUserCreated={(username) => {
             state[username] = false
             setActionOfCreateNewUser(false)
             setState(state)
@@ -377,7 +399,7 @@ function ParentalSettings({
     whenSettingsDone,
     defaultQa,
     defaultPwd,
-    userNames,
+    refreshUsernamesAsync,
     selectedUsernames,
     createNewUserAsync,
     refreshTimeZoneAsync,
@@ -416,7 +438,7 @@ function ParentalSettings({
                 (pwd.userNameDone ? (pwd.isDone ?
                     <QaInput defaultQa={defaultQa} whenItDone={qaDone} /> :
                     <PwdInput pwdUpdate={pwdDone} defaultPwd={pwd.pwd} />
-                ) : <ChooseUsernames usernames={userNames} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUserAsync={createNewUserAsync} />) : <ConfirmTimeZone defaultTimeZone={userChoosedTimeZone} refreshAysncFunc={refreshTimeZoneAsync} whenItDone={timeZoneDone} />
+                ) : <ChooseUsernames refreshUsernamesAsync={refreshUsernamesAsync} selected={pwd.usernameSelected} whenItDone={usernameDone} createNewUserAsync={createNewUserAsync} />) : <ConfirmTimeZone defaultTimeZone={userChoosedTimeZone} refreshAysncFunc={refreshTimeZoneAsync} whenItDone={timeZoneDone} />
         }
     </div>
 }

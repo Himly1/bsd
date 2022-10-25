@@ -8,7 +8,7 @@ import NotSupported from "./components/notSupported"
 import ParentalSettings from "./components/parentalSetting"
 import ParentalSettingClickableButton from "./components/parentalSettingClickablebutton"
 
-import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone, retrieveTheCallbackForRefreshTimeZone, isCurrentOsSupported } from './configFile'
+import { isPwdSetUp, retriveParentPwd, retriveSecretQa, updateParentPwd, updateSecretQa, resetOnlyWorkForTheUsers, retreiveTimeRanges, retreiveFuncForCreateNewUser, resetTimeRanges, retreiveUsernames, retreiveSelectedUsernames, retrieveUserChoosedTimeZone, resetUserChoosedTimeZone, retrieveTheCallbackForRefreshTimeZone, isCurrentOsSupported, retrieveAynsFuncWhichRetrieveTheUsernames } from './configFile'
 import { getLanguageOptions, changeWithName } from './international/language'
 
 
@@ -35,7 +35,6 @@ function App() {
             return !state.pwdSetUp
         }, () => {
             return <ParentalSettings whenSettingsDone={(timezone, usernames, pwd, qa) => {
-                console.log(`The pwd is ${pwd}`)
                 updateParentPwd(pwd)
                 resetUserChoosedTimeZone(timezone)
                 resetOnlyWorkForTheUsers(usernames)
@@ -44,7 +43,7 @@ function App() {
                     randomValuePresentChange: !state.randomValuePresentChange,
                     pwdSetUp: true
                 })
-            }} defaultQa={retriveSecretQa()} defaultPwd={retriveParentPwd()} userNames={retreiveUsernames()} selectedUsernames={retreiveSelectedUsernames()}
+            }} defaultQa={retriveSecretQa()} defaultPwd={retriveParentPwd()} refreshUsernamesAsync={retrieveAynsFuncWhichRetrieveTheUsernames()} selectedUsernames={retreiveSelectedUsernames()}
                 createNewUserAsync={retreiveFuncForCreateNewUser()}
                 refreshTimeZoneAsync={retrieveTheCallbackForRefreshTimeZone()}
                 userChoosedTimeZone={retrieveUserChoosedTimeZone()}

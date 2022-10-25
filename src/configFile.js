@@ -45,6 +45,15 @@ export function retreiveUsernames() {
     return config.usernames
 }
 
+let callbackOfRetreiveUsernames = null
+export function retrieveAynsFuncWhichRetrieveTheUsernames() {
+    if (callbackForCreateUser) {
+        return callbackOfRetreiveUsernames
+    } else {
+        throw 'No callback found for retreive usernames'
+    }
+}
+
 export function retreiveSelectedUsernames() {
     return config.onlyWorkForTheUsers
 }
@@ -118,7 +127,7 @@ export function flush() {
 }
 
 //before run the app should run the init function and pass the cfg 
-export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser, refreshTimeZone) {
+export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser, refreshTimeZone, retreiveUsernamesAsync) {
     changeWithCode(cfg.language)
     Object.keys(config).forEach((key) => {
         config[key] = cfg[key]
@@ -127,4 +136,5 @@ export function init(cfg, callbackForSaveTheConfig, callbackOfCreateUser, refres
     callbackForWriteTheConfigToTheFile = callbackForSaveTheConfig
     callbackForCreateUser = callbackOfCreateUser
     refreshTimeZoneCallback = refreshTimeZone
+    callbackOfRetreiveUsernames = retreiveUsernamesAsync
 }
