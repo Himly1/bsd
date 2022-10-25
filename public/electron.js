@@ -8,7 +8,6 @@ exApp.use(express.json())
 const fs = require('fs')
 const process = require('process')
 const os = require('os')
-const cmd = require('node-cmd')
 const pathResolve = require('path').resolve
 const platform = process.platform
 const currentUsername = os.userInfo().username
@@ -16,6 +15,7 @@ const supported = ['win32'].includes(platform)
 let defaultConfig = {}
 const forExplore = "forExplore"
 const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.json")
+const cmd = require('node-cmd')
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -24,7 +24,7 @@ const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.jso
 const waysOfGetThePathOfThePythonProgram = {
   win32: () => {
     if (isDev) {
-      return 'pythonScripts/win32.pyw'
+      return pathResolve('pythonScripts/win32.pyw')
     }
 
     return pathResolve('resources/pythonScripts/win32.pyw')
@@ -35,17 +35,25 @@ const waysOfGetThePathOfThePythonProgram = {
 //therefore there should be a way to flush the new config to the config file of python program dependes on
 const waysOfFlushConfigToTheSelfStartPythonProgramFolder = {
   win32: () => {
-    const pathOfSelfStarts = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\bsdConfig.json'
-    fs.copyFileSync(configFilePath, pathOfSelfStarts)
+    const pathOfSelfStarts = '"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /K /D /H /Y'
+    const { data, err, stderr } = cmd.runSync(`xcopy.exe "${configFilePath}" ${pathOfSelfStarts}`)
+    if (err || stderr) {
+      throw err
+    }
   }
 }
 
 //how to set the python program as self starts
 const waysOfSetPythonProgramAsSelfStarts = {
   win32: () => {
-    const pathOfSelfStarts = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
+    const pathOfSelfStarts = '"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /K /D /H /Y'
     const pythonPath = waysOfGetThePathOfThePythonProgram[platform]
-    fs.copyFileSync(pythonPath(), pathOfSelfStarts)
+    const command = `xcopy.exe "${pythonPath()}" ${pathOfSelfStarts}`
+    console.log(`The command is ${command}`)
+    const { data, err, stderr } = cmd.runSync(command)
+    if (err || stderr) {
+      throw err
+    }
   }
 }
 
@@ -69,7 +77,8 @@ const waysOfCreateNewUser = {
   win32: ({ username, pwd }) => {
     const command = `net user ${username} ${pwd} /ADD`
     const { data, err, stderr } = cmd.runSync(command)
-    if (err || stderr) {
+    console.log(`data ? ${data}`)
+    if (data === null || data === 'null') {
       throw err.toString() + stderr.toString()
     }
   }
@@ -222,9 +231,10 @@ function loadElectronWindow() {
     });
 
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-    if (isDev) {
-      win.webContents.openDevTools({ mode: 'detach' });
-    }
+    win.webContents.openDevTools({ mode: 'right' });
+    // if (isDev) {
+    // 
+    // }
   }
 
   // This method will be called when Electron has finished
@@ -249,7 +259,6 @@ function loadElectronWindow() {
 
 
 }
-
 setThePythonFileAsSelfStarts()
 loadTheConfigFromFile()
 setUpExpressServer()

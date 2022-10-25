@@ -65,8 +65,7 @@
       "./public/icon.ico"
     ],
     "files": [
-      "build/**/*",
-      "node_modules/**/*"
+      "build/**/*"
     ],
     "buildVersion": "1.0",
     "copyright": "Copyright © 2022 zhengMa",
