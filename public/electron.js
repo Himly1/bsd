@@ -13,7 +13,7 @@ const supported = ['win32'].includes(platform)
 let defaultConfig = {}
 const forExplore = "forExplore"
 const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.json")
-const cmd = require('node-cmd')
+const cmd = require('./cmd')
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -27,7 +27,7 @@ const waysOfSetUP = {
       const taskName = 'BSD-TASK'
       const runWhichFile = pathResolve('resources/pythonScripts/win32/win32.vbs')
       cmd.runSync(`schtasks /Delete /TN ${taskName} -F`)
-      const { data, err, stderr } = cmd.runSync(`schtasks /create /RU Users /sc minute /mo 1 /tn ${taskName} /tr ${runWhichFile} /IT`)
+      cmd.runSync(`schtasks /create /RU Users /sc minute /mo 1 /tn ${taskName} /tr ${runWhichFile} /IT`)
     }
 
     // setUpPython()
@@ -38,9 +38,9 @@ const waysOfSetUP = {
 
 const waysOfGetDefaultTimeZone = {
   win32: () => {
-    const { data, err, stderr } = cmd.runSync('tzutil /g')
-    if (err && stderr) {
-      throw err.toString() + stderr.toString()
+    const { data, error } = cmd.runSync('tzutil /g')
+    if (error) {
+      throw error
     }
 
     return data
@@ -54,9 +54,9 @@ const waysOfGetDefaultTimeZone = {
 const waysOfCreateNewUser = {
   win32: ({ username, pwd }) => {
     const command = `net user ${username} ${pwd} /ADD`
-    const { data, err, stderr } = cmd.runSync(command)
-    if (data === null || data === 'null') {
-      throw err.toString() + stderr.toString()
+    const { data, error } = cmd.runSync(command)
+    if (data === null) {
+      throw error
     }
   }
 }
@@ -67,9 +67,9 @@ const waysOfCreateNewUser = {
 const waysOfGetTheRealUsernamesOfCurrentOs = {
   win32: () => {
     //There is fake username in windows, like guest something
-    const { data, err, stderr } = cmd.runSync('wmic useraccount get name')
-    if (err || stderr) {
-      throw err.toString() + stderr.toString()
+    const { data, error } = cmd.runSync('wmic useraccount get name')
+    if (error) {
+      throw error
     }
 
     // const noGarbled = iconv.decode(data, 'cp936')
@@ -207,7 +207,7 @@ function loadElectronWindow() {
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
     win.webContents.openDevTools({ mode: 'detach' });
   }
-  
+
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
@@ -238,7 +238,6 @@ function setUp() {
     setup()
   }
 }
-
 
 setUp()
 loadTheConfigFromFile()
