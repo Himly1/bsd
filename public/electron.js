@@ -7,17 +7,13 @@ exApp.use(express.urlencoded())
 exApp.use(express.json())
 const fs = require('fs')
 const process = require('process')
-const os = require('os')
 const pathResolve = require('path').resolve
-const platform = isDev ? 'my os' : process.platform
-const currentUsername = os.userInfo().username
+const platform = process.platform
 const supported = ['win32'].includes(platform)
 let defaultConfig = {}
 const forExplore = "forExplore"
 const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.json")
 const cmd = require('node-cmd')
-const iconv = require('iconv-lite')
-
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -26,11 +22,16 @@ const iconv = require('iconv-lite')
 //How to setup everything to make this app work on the os
 const waysOfSetUP = {
   win32: () => {
-    //for windwos it it simple, just create a task schedule that run on every minute for all user
-    const taskName = 'BSD-TASK'
-    const runWhichFile = pathResolve('resources/pythonScripts/win32.vbs')
-    cmd.runSync(`schtasks /Delete /TN ${taskName} -F`)
-    const { data, err, stderr } = cmd.runSync(`schtasks /create /RU Users /sc minute /mo 1 /tn ${taskName} /tr ${runWhichFile} /IT`)
+    function setUpTaskSchedule() {
+      //for windwos it it simple, just create a task schedule that run on every minute for all user
+      const taskName = 'BSD-TASK'
+      const runWhichFile = pathResolve('resources/pythonScripts/win32/win32.vbs')
+      cmd.runSync(`schtasks /Delete /TN ${taskName} -F`)
+      const { data, err, stderr } = cmd.runSync(`schtasks /create /RU Users /sc minute /mo 1 /tn ${taskName} /tr ${runWhichFile} /IT`)
+    }
+
+    // setUpPython()
+    setUpTaskSchedule()
   }
 }
 
@@ -204,10 +205,9 @@ function loadElectronWindow() {
     });
 
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-    if (isDev) {
-      win.webContents.openDevTools({ mode: 'detach' });
-    }
+    win.webContents.openDevTools({ mode: 'detach' });
   }
+  
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.

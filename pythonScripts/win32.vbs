@@ -1,1 +1,0 @@
-CreateObject("Wscript.Shell").Run "C:\Windows\BSD\resources\pythonScripts\win32.bat", 0, True

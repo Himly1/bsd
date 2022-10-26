@@ -72,7 +72,7 @@ function App() {
         return test()
     })[1]
 
-    return <div style={{ 'height': '80%' }}>
+    return <div style={{ 'height': '89%' }}>
         <div>
             <div className="level">
                 <div className="level-item"></div>

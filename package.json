@@ -79,7 +79,7 @@
     "mac": {},
     "nsis": {
       "deleteAppDataOnUninstall": true,
-      "oneClick": true,
+      "oneClick": false,
       "allowElevation": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
@@ -87,6 +87,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "BSD",
+      "perMachine": true,
       "include": "build/installer.nsh"
     },
     "linux": {

@@ -432,7 +432,7 @@ function ParentalSettings({
         whenSettingsDone(pwd.timeZone, pwd.usernameSelected, pwd.pwd, qa)
     }
 
-    return <div style={{ 'height': '100%' }}>
+    return <div style={{ 'height': '88%', 'marginTop': '16%'}}>
         {
             pwd.timeZoneSetUp ?
                 (pwd.userNameDone ? (pwd.isDone ?
