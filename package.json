@@ -27,7 +27,8 @@
     "eject": "react-scripts eject",
     "dev-elec-on-win": "npm run build && xcopy.exe .\\pythonScripts\\ .\\build\\ && xcopy.exe .\\config.json .\\build\\ && electron .",
     "dev-elec-on-linux": "npm run build && cp -r ./pythonScripts/ ./build/ && cp config.json ./build/  electron .",
-    "build-win": "npm run build && electron-builder --win --ia32"
+    "build-win": "npm run build && electron-builder --win --ia32",
+    "build-linux": "npm run build && electron-builder --linux"
   },
   "eslintConfig": {
     "extends": [
@@ -90,7 +91,8 @@
       "include": "build/installer.nsh"
     },
     "linux": {
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "target": "zip"
     }
   }
 }
