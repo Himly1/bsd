@@ -205,7 +205,9 @@ function loadElectronWindow() {
     });
 
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-    win.webContents.openDevTools({ mode: 'detach' });
+    if (isDev) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
   }
 
 
