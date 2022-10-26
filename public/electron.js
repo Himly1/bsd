@@ -16,6 +16,8 @@ let defaultConfig = {}
 const forExplore = "forExplore"
 const configFilePath = isDev ? 'config.json' : pathResolve("resources/config.json")
 const cmd = require('node-cmd')
+const iconv = require('iconv-lite')
+
 //If you need to support other platform just write a function in the variables startWith "waysOf*"
 //And add a python program at the folder 'pythonScripts'
 //Just as simple as that dont need to worry about anything
@@ -69,6 +71,7 @@ const waysOfGetTheRealUsernamesOfCurrentOs = {
       throw err.toString() + stderr.toString()
     }
 
+    // const noGarbled = iconv.decode(data, 'cp936')
     const pureUsernames = data.split('\n').reduce((rs, name) => {
       const pureName = name.replaceAll("\r", "").replaceAll("\n", "").replaceAll(" ", "")
       rs.push(pureName)
